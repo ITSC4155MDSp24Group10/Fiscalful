@@ -13,8 +13,8 @@ const Header = () => {
                         <li><Link to="/contact">Contact</Link></li>
                     </div>
                     <div className='right-side'>
-                        <li><Link to="/login">Login</Link></li>
-                        <li><Link to="/dashboard">Dashboard</Link></li>
+                        <li><Link to="/login">Log in</Link></li>
+                        <li><Link to="/signup">Get Started</Link></li>
                     </div>
                 </ul>
             </nav>
