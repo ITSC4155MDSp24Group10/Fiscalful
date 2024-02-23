@@ -5,8 +5,8 @@ const Landing = () => {
   return (
     <section className='landing section' id='landing'>
         <div>
-            <h1>Welcome to our website!</h1>
-            <p>This is the landing page.</p>
+            <h1 className='landing-title'>Welcome to our website!</h1>
+            <p className='landing-content'>This is the landing page.</p>
         </div>
     </section>
   );

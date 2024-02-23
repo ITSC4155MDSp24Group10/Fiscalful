@@ -1,3 +1,25 @@
-.header {
+li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 2rem;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.header-nav {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+  
+.left-side, .right-side {
     display: flex;
 }
