@@ -1,32 +1,36 @@
-from flask import Flask, request
+from flask import Flask, request, redirect, url_for, jsonify
 from utils.login_utils import * 
 
 app = Flask(__name__)
 
-@app.route("/")
-def home_page():
-    return "<p>Hello, World!</p>"
 
-@app.route("/chatbot")
-def chat_bot_page():
-    pass 
-
-@app.route("/dashboard")
-def user_dashboard_page():
-    pass 
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        username = request.args.get('username', '')
-        password = request.args.get('password', '')
+        data = request.get_json()
+        username = data.get('username', '')
+        password = data.get('password', '')
         if validate_credentials(username, password):
-            # login
-            pass
+            return redirect(url_for('user_dashboard_page'))
+        else:
+            error = "Invalid username or password"
+            return jsonify({'error': error}), 400
     else:
-        error = "invalid username or password"
-    # render react pass in error
+        error = 'Invalid request method. Route only accepts posts.'
+        return jsonify({'error': error}), 405
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route('/register', methods=['POST'])
 def register():
-    pass
+    if request.method == 'POST':
+        data = request.get_json()
+        username = data.get('username', '')
+        password = data.get('password', '')
+        if validate_credentials(username, password):
+            return redirect(url_for('login'))
+        else:
+            error = "Invalid username or password"
+            return jsonify({'error': error}), 400
+    else: 
+        error = 'Invalid request method. Route only accepts posts.'
+        return jsonify({'error': error}), 405
