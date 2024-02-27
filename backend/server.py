@@ -30,7 +30,7 @@ def register():
         if validate_credentials(username, password):
             return redirect(url_for('login'))
         else:
-            error = "Invalid username or password"
+            error = "Invalid username or passwords"
             return jsonify({'error': error}), 400
     else: 
         error = 'Invalid request method. Route only accepts posts.'
