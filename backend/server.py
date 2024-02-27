@@ -20,6 +20,7 @@ def login():
         return jsonify({'error': error}), 405
 
 
+"""TODO encrypt passwords and post creds to firebase """
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
