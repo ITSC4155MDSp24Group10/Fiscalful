@@ -1,3 +1,41 @@
-.login-title {
+.login__title {
     text-align: center;
 }
+  
+.login__subtitle {
+    text-align: center;
+}
+  
+.login {
+    text-align: center;
+}
+  
+.login__button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 1rem;
+}
+  
+.register {
+    font-size: x-small;
+    text-align: center;
+    color: black;
+}
+  
+.error {
+    font-size: small;
+    font-weight: bolder;
+    color: red;
+}
+  
+.password-toggle {
+    margin-bottom: 1rem;
+    cursor: pointer;
+    color: black;
+}  
