@@ -1,3 +1,43 @@
 .signup-title {
     text-align: center;
 }
+
+.signup__subtitle {
+    text-align: center;
+}
+
+.signup {
+    text-align: center;
+}
+
+.name,
+    .email,
+        .password {
+            color: black;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-width: 3px;
+            text-align: center;
+        }
+
+.signup__button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.login-toggle {
+    font-size: x-small;
+    text-align: center;
+    color: black;
+}
