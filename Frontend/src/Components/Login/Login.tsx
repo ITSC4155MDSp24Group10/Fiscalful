@@ -23,16 +23,19 @@ function Login() {
 
   const signIn = (e: FormEvent) => {
     e.preventDefault();
-
+  
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const uid = user.uid;
+        localStorage.setItem('firebase_user_id', uid); // store uid in local storage for authentication
         navigate('/dashboard');
       })
       .catch((error) => {
         setError('Email and password combination do not match!');
         console.log(error);
       });
-  };
+  };  
 
   return (
     <section className="login section" id="login">

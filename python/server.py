@@ -6,6 +6,11 @@ import datetime as dt
 import json
 import time
 
+import firebase_admin
+
+from firebase_admin import credentials
+from firebase_admin import firestore
+
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 import plaid
@@ -70,6 +75,10 @@ PLAID_PRODUCTS = os.getenv('PLAID_PRODUCTS', 'transactions').split(',')
 # will be able to select institutions from.
 PLAID_COUNTRY_CODES = os.getenv('PLAID_COUNTRY_CODES', 'US').split(',')
 
+# Firebase setup
+cred = credentials.Certificate("./firebase_credentials.json")  # Replace with your service account key file
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 def empty_to_none(field):
     value = os.getenv(field)
@@ -234,12 +243,19 @@ def get_access_token():
     global item_id
     global transfer_id
     public_token = request.form['public_token']
+    firebase_user_id = request.form['firebase_user_id']
     try:
         exchange_request = ItemPublicTokenExchangeRequest(
             public_token=public_token)
         exchange_response = client.item_public_token_exchange(exchange_request)
         access_token = exchange_response['access_token']
         item_id = exchange_response['item_id']
+        item_access_token = {
+            "firebase_user_id": firebase_user_id,
+            "access_token": access_token
+        }
+        pretty_print_response(exchange_response.to_dict())
+        db.collection("item_access_tokens").add(item_access_token)
         return jsonify(exchange_response.to_dict())
     except plaid.ApiException as e:
         return json.loads(e.body)
@@ -571,8 +587,13 @@ def item():
         error_response = format_error(e)
         return jsonify(error_response)
 
+@app.route('/api/get_tokens_for_user', methods=['GET'])
+def get_tokens_for_user():
+    """Takes in firebase_user_id of current user, returns all access_tokens that contain the firebase key"""
+    pass 
+
 def pretty_print_response(response):
-  print(json.dumps(response, indent=2, sort_keys=True, default=str))
+    print(json.dumps(response, indent=2, sort_keys=True, default=str))
 
 def format_error(e):
     response = json.loads(e.body)

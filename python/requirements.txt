@@ -3,3 +3,5 @@ plaid_python==14.0.0
 python-dotenv==0.15.0
 itsdangerous==2.1.2
 werkzeug==3.0.1
+firebase-admin==6.4.0
+grpcio==1.39.0; python_version < '3.0'
