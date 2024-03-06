@@ -16,6 +16,9 @@ function Signup() {
     createUserWithEmailAndPassword(auth, Email, Password)
       .then((userCredential) => {
         console.log(userCredential);
+        const user = userCredential.user;
+        const uid = user.uid;
+        localStorage.setItem('firebase_user_id', uid); // store uid in local storage for authentication
         navigate('/dashboard');
       })
       .catch((error) => {

@@ -67,6 +67,9 @@ const App = () => {
     /*
       Fetch all access_tokens for current user, these tokens will be used to
       query stuff like transactions on each item.
+
+      DOESN'T HANDLE DUPLICATES, might have to make response a hash set or something to 
+      remove dups
     */
     const firebase_user_id = localStorage.getItem('firebase_user_id');
     const response = await fetch(`/api/get_tokens_for_user?firebase_user_id=${firebase_user_id}`, {
