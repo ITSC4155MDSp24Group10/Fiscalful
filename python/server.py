@@ -8,6 +8,7 @@ import time
 
 import firebase_admin
 
+from firebase_admin import db
 from firebase_admin import credentials
 from firebase_admin import firestore
 
@@ -76,15 +77,18 @@ PLAID_PRODUCTS = os.getenv('PLAID_PRODUCTS', 'transactions').split(',')
 PLAID_COUNTRY_CODES = os.getenv('PLAID_COUNTRY_CODES', 'US').split(',')
 
 # Firebase setup
-cred = credentials.Certificate("./firebase_credentials.json")  # Replace with your service account key file
+# Replace with your service account key file
+cred = credentials.Certificate("./firebase_credentials.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
 
 def empty_to_none(field):
     value = os.getenv(field)
     if value is None or len(value) == 0:
         return None
     return value
+
 
 host = plaid.Environment.Sandbox
 
@@ -179,17 +183,18 @@ def create_link_token_for_payment():
             request
         )
         pretty_print_response(response.to_dict())
-        
+
         # We store the payment_id in memory for demo purposes - in production, store it in a secure
         # persistent data store along with the Payment metadata, such as userId.
         payment_id = response['payment_id']
-        
+
         linkRequest = LinkTokenCreateRequest(
             # The 'payment_initiation' product has to be the only element in the 'products' list.
             products=[Products('payment_initiation')],
             client_name='Plaid Test',
             # Institutions from all listed countries will be shown.
-            country_codes=list(map(lambda x: CountryCode(x), PLAID_COUNTRY_CODES)),
+            country_codes=list(
+                map(lambda x: CountryCode(x), PLAID_COUNTRY_CODES)),
             language='en',
             user=LinkTokenCreateRequestUser(
                 # This should correspond to a unique id for the current user.
@@ -202,8 +207,8 @@ def create_link_token_for_payment():
             )
         )
 
-        if PLAID_REDIRECT_URI!=None:
-            linkRequest['redirect_uri']=PLAID_REDIRECT_URI
+        if PLAID_REDIRECT_URI != None:
+            linkRequest['redirect_uri'] = PLAID_REDIRECT_URI
         linkResponse = client.link_token_create(linkRequest)
         pretty_print_response(linkResponse.to_dict())
         return jsonify(linkResponse.to_dict())
@@ -217,14 +222,15 @@ def create_link_token():
         request = LinkTokenCreateRequest(
             products=products,
             client_name="Plaid Quickstart",
-            country_codes=list(map(lambda x: CountryCode(x), PLAID_COUNTRY_CODES)),
+            country_codes=list(
+                map(lambda x: CountryCode(x), PLAID_COUNTRY_CODES)),
             language='en',
             user=LinkTokenCreateRequestUser(
                 client_user_id=str(time.time())
             )
         )
-        if PLAID_REDIRECT_URI!=None:
-            request['redirect_uri']=PLAID_REDIRECT_URI
+        if PLAID_REDIRECT_URI != None:
+            request['redirect_uri'] = PLAID_REDIRECT_URI
     # create link token
         response = client.link_token_create(request)
         return jsonify(response.to_dict())
@@ -268,12 +274,12 @@ def get_access_token():
 @app.route('/api/auth', methods=['GET'])
 def get_auth():
     try:
-       request = AuthGetRequest(
+        request = AuthGetRequest(
             access_token=access_token
         )
-       response = client.auth_get(request)
-       pretty_print_response(response.to_dict())
-       return jsonify(response.to_dict())
+        response = client.auth_get(request)
+        pretty_print_response(response.to_dict())
+        return jsonify(response.to_dict())
     except plaid.ApiException as e:
         error_response = format_error(e)
         return jsonify(error_response)
@@ -291,7 +297,7 @@ def get_transactions():
     # New transaction updates since "cursor"
     added = []
     modified = []
-    removed = [] # Removed transaction ids
+    removed = []  # Removed transaction ids
     has_more = True
     try:
         # Iterate through each page of new transaction updates for item
@@ -496,9 +502,10 @@ def get_investments_transactions():
 # This functionality is only relevant for the ACH Transfer product.
 # Authorize a transfer
 
+
 @app.route('/api/transfer_authorize', methods=['GET'])
 def transfer_authorization():
-    global authorization_id 
+    global authorization_id
     global account_id
     request = AccountsGetRequest(access_token=access_token)
     response = client.accounts_get(request)
@@ -532,6 +539,7 @@ def transfer_authorization():
         return jsonify(error_response)
 
 # Create Transfer for a specified Transfer ID
+
 
 @app.route('/api/transfer_create', methods=['GET'])
 def transfer():
@@ -576,7 +584,8 @@ def item():
         response = client.item_get(request)
         request = InstitutionsGetByIdRequest(
             institution_id=response['item']['institution_id'],
-            country_codes=list(map(lambda x: CountryCode(x), PLAID_COUNTRY_CODES))
+            country_codes=list(
+                map(lambda x: CountryCode(x), PLAID_COUNTRY_CODES))
         )
         institution_response = client.institutions_get_by_id(request)
         pretty_print_response(response.to_dict())
@@ -587,18 +596,28 @@ def item():
         error_response = format_error(e)
         return jsonify(error_response)
 
+
 @app.route('/api/get_tokens_for_user', methods=['GET'])
 def get_tokens_for_user():
-    """Takes in firebase_user_id of current user, returns all access_tokens that contain the firebase key"""
-    pass 
+    """
+    Takes in firebase_user_id of current user, returns all access_tokens that contain the firebase key
+    """
+    firebase_user_id = request.args.get('firebase_user_id')
+    collection = db.collection("item_access_tokens")
+    result = collection.where("firebase_user_id", "==", firebase_user_id).get()
+    access_tokens = [token.to_dict() for token in result]
+    return jsonify(access_tokens)
+
 
 def pretty_print_response(response):
     print(json.dumps(response, indent=2, sort_keys=True, default=str))
+
 
 def format_error(e):
     response = json.loads(e.body)
     return {'error': {'status_code': e.status, 'display_message':
                       response['error_message'], 'error_code': response['error_code'], 'error_type': response['error_type']}}
+
 
 if __name__ == '__main__':
     app.run(port=int(os.getenv('PORT', 8000)))
