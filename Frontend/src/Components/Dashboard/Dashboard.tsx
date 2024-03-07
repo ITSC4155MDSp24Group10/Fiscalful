@@ -63,6 +63,35 @@ const App = () => {
     [dispatch]
   );
 
+  const queryOnComponentLoad = useCallback(async () => {
+    /*
+      Fetch all access_tokens for current user, these tokens will be used to
+      query stuff like transactions on each item.
+
+      DOESN'T HANDLE DUPLICATES, might have to make response a hash set or something to 
+      remove dups
+    */
+    const firebase_user_id = localStorage.getItem('firebase_user_id');
+    const response = await fetch(`/api/get_tokens_for_user?firebase_user_id=${firebase_user_id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    const data = await response.json();
+    console.log(data)
+    data.forEach((item: { access_token: string; }) => {
+      console.log(item.access_token);
+    });
+    if (!response.ok) {
+      return;
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    queryOnComponentLoad();
+  }, [queryOnComponentLoad]);
+
   useEffect(() => {
     const init = async () => {
       const { paymentInitiation } = await getInfo(); // used to determine which path to take when generating token

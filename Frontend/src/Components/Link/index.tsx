@@ -7,6 +7,7 @@ import {Products} from "plaid";
 
 const Link = () => {
   const { linkToken, isPaymentInitiation, dispatch } = useContext(Context);
+  const firebase_user_id = localStorage.getItem('firebase_user_id'); // Retrieve UID from local storage
 
   const onSuccess = React.useCallback(
     (public_token: string) => {
@@ -17,7 +18,7 @@ const Link = () => {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
           },
-          body: `public_token=${public_token}`,
+          body: `public_token=${public_token}&firebase_user_id=${firebase_user_id}`, 
         });
         if (!response.ok) {
           dispatch({
