@@ -7,7 +7,7 @@ import json
 import time
 import subprocess
 import firebase_admin
-
+from transformers import pipeline
 from firebase_admin import db
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -81,6 +81,8 @@ PLAID_COUNTRY_CODES = os.getenv('PLAID_COUNTRY_CODES', 'US').split(',')
 cred = credentials.Certificate("./firebase_credentials.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+
 
 
 def empty_to_none(field):
@@ -656,13 +658,24 @@ def get_item_transactions():
         return jsonify(error_response)
 
 
+
 @app.route('/api/ask_chatbot', methods=['GET'])
 def ask_chatbot():
     """
-        fetches the account report from the firebase document, preprocess,
-        ask chatbot
+    IN PROGRESS
+    Fetches the account report from the Firebase document, preprocesses it,
+    and asks the chatbot using an LLM.
     """
-    pass
+    firebase_user_id = request.args.get('firebase_user_id')
+    prompt = request.args.get('prompt')
+    doc_ref = db.collection('account_reports').document(firebase_user_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        transaction_history = doc.to_dict()
+        full_prompt = f"{prompt}\n{transaction_history}"
+    else:
+        return jsonify({'error': 'Document not found'}), 404
 
 
 def pretty_print_response(response):

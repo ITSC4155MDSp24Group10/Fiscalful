@@ -23,7 +23,6 @@ def fetch_records_for_user(firebase_user_id):
             print(f"Failed to fetch access tokens for user {firebase_user_id}")
             return
         access_tokens = access_tokens_response.json()
-        print("balls", access_tokens)
         transaction_history = {}
         for token_info in access_tokens:
             access_token = token_info['access_token']
