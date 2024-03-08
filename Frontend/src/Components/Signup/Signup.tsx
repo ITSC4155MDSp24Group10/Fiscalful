@@ -11,20 +11,32 @@ function Signup() {
   const [Password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const Create = (e: FormEvent) => {
+  const Create = async (e: FormEvent) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, Email, Password)
-      .then((userCredential) => {
-        console.log(userCredential);
-        const user = userCredential.user;
-        const uid = user.uid;
-        localStorage.setItem('firebase_user_id', uid); // store uid in local storage for authentication
-        navigate('/dashboard');
-      })
-      .catch((error) => {
-        console.log(error);
+  
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, Email, Password);
+      const user = userCredential.user;
+      const uid = user.uid;
+  
+      const response = await fetch("/api/start_worker", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: `firebase_user_id=${uid}`, 
       });
+  
+      if (!response.ok) {
+        throw new Error("Failed to start worker");
+      }
+      localStorage.setItem('firebase_user_id', uid);
+      navigate('/dashboard');
+    } catch (error) {
+      console.log(error);
+    }
   };
+  
 
   return (
     <section className="signup section" id="signup">

@@ -5,13 +5,13 @@ import os
 import datetime as dt
 import json
 import time
-
+import subprocess
 import firebase_admin
-
+from transformers import pipeline
 from firebase_admin import db
 from firebase_admin import credentials
 from firebase_admin import firestore
-
+import flask
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 import plaid
@@ -81,6 +81,8 @@ PLAID_COUNTRY_CODES = os.getenv('PLAID_COUNTRY_CODES', 'US').split(',')
 cred = credentials.Certificate("./firebase_credentials.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+
 
 
 def empty_to_none(field):
@@ -317,7 +319,7 @@ def get_transactions():
             pretty_print_response(response)
 
         # Return the 8 most recent transactions
-        latest_transactions = sorted(added, key=lambda t: t['date'])[-8:]
+        latest_transactions = sorted(added, key=lambda t: t['date'])
         return jsonify({
             'latest_transactions': latest_transactions})
 
@@ -609,6 +611,73 @@ def get_tokens_for_user():
     return jsonify(access_tokens)
 
 
+@app.route('/api/start_worker', methods=['POST'])
+def start_worker():
+    """
+    Function to start worker and save transactions report into a database
+    """
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    worker_path = os.path.join(current_dir, 'worker.py')
+    firebase_user_id = request.json.get('firebase_user_id')
+    subprocess.Popen([worker_path, firebase_user_id])
+    return 'Worker started for user {}'.format(firebase_user_id)
+
+
+@app.route('/api/item_transactions', methods=['GET'])
+def get_item_transactions():
+    cursor = ''
+    current_access_token = flask.request.args.get('current_access_token')
+    added = []
+    modified = []
+    removed = []  # Removed transaction ids
+    has_more = True
+    try:
+        # Iterate through each page of new transaction updates for item
+        while has_more:
+            request = TransactionsSyncRequest(
+                access_token=current_access_token,
+                cursor=cursor,
+            )
+            response = client.transactions_sync(request).to_dict()
+            # Add this page of results
+            added.extend(response['added'])
+            modified.extend(response['modified'])
+            removed.extend(response['removed'])
+            has_more = response['has_more']
+            # Update cursor to the next cursor
+            cursor = response['next_cursor']
+            pretty_print_response(response)
+
+        # Return the 8 most recent transactions
+        latest_transactions = sorted(added, key=lambda t: t['date'])
+        return jsonify({
+            'latest_transactions': latest_transactions})
+
+    except plaid.ApiException as e:
+        error_response = format_error(e)
+        return jsonify(error_response)
+
+
+
+@app.route('/api/ask_chatbot', methods=['GET'])
+def ask_chatbot():
+    """
+    IN PROGRESS
+    Fetches the account report from the Firebase document, preprocesses it,
+    and asks the chatbot using an LLM.
+    """
+    firebase_user_id = request.args.get('firebase_user_id')
+    prompt = request.args.get('prompt')
+    doc_ref = db.collection('account_reports').document(firebase_user_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        transaction_history = doc.to_dict()
+        full_prompt = f"{prompt}\n{transaction_history}"
+    else:
+        return jsonify({'error': 'Document not found'}), 404
+
+
 def pretty_print_response(response):
     print(json.dumps(response, indent=2, sort_keys=True, default=str))
 
@@ -620,4 +689,5 @@ def format_error(e):
 
 
 if __name__ == '__main__':
-    app.run(port=int(os.getenv('PORT', 8000)))
+    # app.run(port=int(os.getenv('PORT', 8000)))
+    app.run(debug=True, port=8000)

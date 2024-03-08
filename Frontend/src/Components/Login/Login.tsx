@@ -21,21 +21,33 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  const signIn = (e: FormEvent) => {
+  const signIn = async (e: FormEvent) => {
     e.preventDefault();
   
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        const uid = user.uid;
-        localStorage.setItem('firebase_user_id', uid); // store uid in local storage for authentication
-        navigate('/dashboard');
-      })
-      .catch((error) => {
-        setError('Email and password combination do not match!');
-        console.log(error);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      const uid = user.uid;
+      console.log(",aasd", uid);
+      const response = await fetch("/api/start_worker", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ firebase_user_id: uid }), // Send data as JSON
       });
-  };  
+  
+      if (!response.ok) {
+        throw new Error("Failed to start worker");
+      }
+      localStorage.setItem('firebase_user_id', uid); // store uid in local storage for authentication
+      navigate('/dashboard');
+    } catch (error) {
+      setError('Email and password combination do not match!');
+      console.log(error);
+    }
+  };
+  
 
   return (
     <section className="login section" id="login">
