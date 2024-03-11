@@ -1,46 +1,85 @@
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
 .signup__title {
     text-align: center;
-    margin-top: 8rem;
     margin-bottom: 0rem;
 }
-
+  
 .signup__subtitle {
     text-align: center;
-    margin-top: 1rem;
 }
-
+  
 .signup {
     text-align: center;
 }
 
-.name,
-    .email,
-        .password {
-            color: black;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-            margin-bottom: 1rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            border-width: 3px;
-            text-align: center;
-        }
+.signup h2 {
+    font-size: larger;
+    margin-top: -0.5rem;
+}
 
+.name, .email, .password {
+    text-align: left !important;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid #333;
+}
+
+.name::placeholder, .email::placeholder, .password::placeholder {
+    text-align: left;
+}
+
+.name:focus, .email:focus, .password:focus {
+    outline: none;
+}
+  
 .signup__button {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    color: black;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    color: white;
+    background-color: #333;
     margin-left: auto;
     margin-right: auto;
     display: block;
     margin-bottom: 1rem;
+    margin-top: 2rem;
+    border-radius: 5px;
+    border: none;
 }
 
+.signup__button:hover {
+    cursor: pointer;
+    background-color: #555;
+}
+  
 .login-toggle {
     font-size: x-small;
-    text-align: center;
+    text-align: center !important;
     color: black;
 }
+  
+.error {
+    font-size: small;
+    font-weight: bolder;
+    color: red;
+    margin-bottom: -1rem;
+}
+  
+.password-toggle {
+    margin-bottom: -1rem;
+    cursor: pointer;
+    color: black;
+}  
