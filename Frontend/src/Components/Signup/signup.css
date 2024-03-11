@@ -1,9 +1,12 @@
-.signup-title {
+.signup__title {
     text-align: center;
+    margin-top: 8rem;
+    margin-bottom: 0rem;
 }
 
 .signup__subtitle {
     text-align: center;
+    margin-top: 1rem;
 }
 
 .signup {

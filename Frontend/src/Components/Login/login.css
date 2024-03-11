@@ -1,25 +1,77 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
 .login__title {
     text-align: center;
+    margin-bottom: 0rem;
 }
   
 .login__subtitle {
     text-align: center;
 }
+
+.form-container {
+    margin-top: 3rem;
+    border: 4px solid black;
+    padding: 3rem;
+    border-radius: 8px;
+    width: 500px;
+    background-color: whitesmoke;
+}
   
 .login {
     text-align: center;
 }
+
+.login h2 {
+    font-size: larger;
+    margin-top: -0.5rem;
+}
+
+.email, .password {
+    text-align: left !important;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid #333;
+}
+
+.email::placeholder, .password::placeholder {
+    text-align: left;
+}
+
+.email:focus, .password:focus {
+    outline: none;
+}
   
 .login__button {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    color: black;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    color: white;
+    background-color: #333;
     margin-left: auto;
     margin-right: auto;
     display: block;
     margin-bottom: 1rem;
+    margin-top: 2rem;
+    border-radius: 5px;
+    border: none;
+}
+
+.login__button:hover {
+    cursor: pointer;
+    background-color: #555;
 }
   
 .register {
@@ -32,10 +84,11 @@
     font-size: small;
     font-weight: bolder;
     color: red;
+    margin-bottom: -1rem;
 }
   
 .password-toggle {
-    margin-bottom: 1rem;
+    margin-bottom: -1rem;
     cursor: pointer;
     color: black;
 }  

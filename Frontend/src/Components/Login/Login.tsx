@@ -36,42 +36,47 @@ function Login() {
 
   return (
     <section className="login section" id="login">
-      <h1 className="login__title">Log In</h1>
-      <span className="login__subtitle">Register An Account</span>
+      <div className='login-container'>
+        <h1 className="login__title">Log In</h1>
+        <span className="login__subtitle">Register An Account</span>
 
-      <h3 className="login">Log Into Your Account</h3>
-      <form onSubmit={signIn}>
-        <input
-          className="email"
-          type="email"
-          placeholder="Enter Your Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <div className="password-container">
-          <input
-            className="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Enter Your Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <p className="error">{error}</p>}
-          {password && (
-            <FontAwesomeIcon
-              icon={showPassword ? faEyeSlash : faEye}
-              className="password-toggle"
-              onClick={togglePasswordVisibility}
+        <div className='form-container'>
+          <h2 className="login">Log Into Your Account</h2>
+          <form onSubmit={signIn}>
+            <input
+              className="email"
+              type="email"
+              placeholder="Enter Your Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-          )}
+            <div className="password-container">
+              <input
+                className="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter Your Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {error && <p className="error">{error}</p>}
+              {password && (
+                <FontAwesomeIcon
+                  icon={showPassword ? faEyeSlash : faEye}
+                  className="password-toggle"
+                  onClick={togglePasswordVisibility}
+                />
+              )}
+            </div>
+            <button className="login__button" type="submit">
+              Log In
+            </button>
+          </form>
+        
+          <Link to="/signup" className="register">
+            <i></i> Don't Have An Account? Register Today!
+          </Link>
         </div>
-        <button className="login__button" type="submit">
-          Log In
-        </button>
-      </form>
-      <Link to="/signup" className="register">
-        <i></i> Don't Have An Account? Register Today!
-      </Link>
+      </div>
     </section>
   );
 }
