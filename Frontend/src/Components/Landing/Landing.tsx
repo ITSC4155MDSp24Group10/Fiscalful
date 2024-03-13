@@ -1,5 +1,5 @@
 import React from 'react';
-import backgroundImage from "../../Assets/1710168939527.jpeg";
+import backgroundImage from "../../Assets/infoCircle.jpeg";
 import './landing.css';
 
 
