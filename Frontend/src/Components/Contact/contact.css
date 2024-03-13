@@ -1,3 +1,27 @@
 .contact-title {
     text-align: center;
  }
+
+.container {
+    margin-top: 100px;
+    width: 100%;
+}
+
+.contact-form {
+    width: 25%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 10px 0 #ccc;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.contact-form textarea {
+    width: 195px;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+.submit-button {
+    margin-bottom: 10px;
+}
