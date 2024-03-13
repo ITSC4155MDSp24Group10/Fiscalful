@@ -37,44 +37,51 @@ function Signup() {
     }
   };
   
-
   return (
     <section className="signup section" id="signup">
-      <h1 className="signup__title">Sign Up</h1>
-      <span className="signup__subtitle">Register An Account</span>
-
-      <form onSubmit={Create}>
-        <h3 className="signup">Create An Account</h3>
-        <input
-          className="name"
-          type="text"
-          placeholder="Enter Your Name"
-          value={Name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          className="email"
-          type="email"
-          placeholder="Enter Your Email"
-          value={Email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="password"
-          type="password"
-          placeholder="Enter Your Password"
-          value={Password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="signup__button" type="submit">
-          Sign Up
-        </button>
-      </form>
-      <Link to="/login" className="login-toggle">
-        <i></i> Already Have An Account? Login!
-      </Link>
+      <div className='signup-container'>
+        <h1 className="signup__title">Sign Up</h1>
+        <span className="signup__subtitle">Register An Account</span>
+ 
+ 
+        <div className='form-container'>
+          <h2 className="signup">Create An Account</h2>
+          <form onSubmit={Create}>
+            <input
+              className="name"
+              type="text"
+              placeholder="Enter Your Name"
+              value={Name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              className="email"
+              type="email"
+              placeholder="Enter Your Email"
+              value={Email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <div className="password-container">
+              <input
+                className="password"
+                type='text'
+                placeholder="Enter Your Password"
+                value={Password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <button className="signup__button" type="submit">
+              Sign Up
+            </button>
+          </form>
+         
+          <Link to="/login" className="login-toggle">
+            <i></i> Already Have An Account? Login!
+          </Link>
+        </div>
+      </div>
     </section>
   );
-}
+} 
 
-export default Signup;
+export default Signup; 
