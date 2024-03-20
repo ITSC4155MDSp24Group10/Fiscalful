@@ -2,6 +2,7 @@
   "name": "plaid_react_quickstart",
   "version": "0.1.0",
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@firebase/auth": "^1.6.1",
     "@firebase/database": "^1.0.3",
     "@firebase/firestore": "^4.4.3",
