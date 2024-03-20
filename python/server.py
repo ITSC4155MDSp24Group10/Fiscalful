@@ -5,6 +5,7 @@ import os
 import datetime as dt
 import json
 import time
+import sys
 import subprocess
 import firebase_admin
 from transformers import pipeline
@@ -619,7 +620,7 @@ def start_worker():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     worker_path = os.path.join(current_dir, 'worker.py')
     firebase_user_id = request.json.get('firebase_user_id')
-    subprocess.Popen(['python', worker_path, firebase_user_id])
+    subprocess.Popen([sys.executable, worker_path, firebase_user_id])
     return 'Worker started for user {}'.format(firebase_user_id)
 
 @app.route('/api/item_transactions', methods=['GET'])
