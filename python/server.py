@@ -619,9 +619,8 @@ def start_worker():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     worker_path = os.path.join(current_dir, 'worker.py')
     firebase_user_id = request.json.get('firebase_user_id')
-    subprocess.Popen([worker_path, firebase_user_id])
+    subprocess.Popen(['python', worker_path, firebase_user_id])
     return 'Worker started for user {}'.format(firebase_user_id)
-
 
 @app.route('/api/item_transactions', methods=['GET'])
 def get_item_transactions():
