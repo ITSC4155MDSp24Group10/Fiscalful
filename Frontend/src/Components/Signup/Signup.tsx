@@ -43,7 +43,6 @@ function Signup() {
         <h1 className="signup__title">Sign Up</h1>
         <span className="signup__subtitle">Register An Account</span>
  
- 
         <div className='form-container'>
           <h2 className="signup">Create An Account</h2>
           <form onSubmit={Create}>

@@ -27,17 +27,38 @@ const Contact = () => {
   };
 
   return (
-    <div className='container'>
-      <form ref={form} onSubmit={sendEmail} className='contact-form'>
-        <h1 className='contact-title'>Contact Us</h1>
-        <input type='text' placeholder='Your Name' name='user_name' className='name' required />
-        <input type='text' placeholder='Your Email' name='user_email' className='email' required />
-        <textarea placeholder='Leave a Message' name='message' className='message' required ></textarea>
-        <div>
-          <button type='submit' className='submit-button'>Submit</button>
+    <section className="login-container" id="contact">
+        <h1 className="login__title">Contact</h1>
+        <span className="login__subtitle">Reach Out To Us</span>
+  
+      <div className='form-container'>
+        <div className='login'>
+          <h2>Send Us A Message</h2>
+          <form ref={form} onSubmit={sendEmail}>
+            <input 
+              type='text' 
+              placeholder='Your Name' 
+              name='user_name' 
+              className='email' required 
+            />
+            <input 
+              type='text' 
+              placeholder='Your Email' 
+              name='user_email' 
+              className='email' required 
+            />
+            <textarea 
+              placeholder='Leave a Message' 
+              name='message' 
+              className='email' required 
+            ></textarea>
+            <button type='submit' className='login__button'>
+              Submit
+            </button>
+          </form>
         </div>
-      </form>
-    </div>
+      </div>
+    </section>
   );
 };
 
