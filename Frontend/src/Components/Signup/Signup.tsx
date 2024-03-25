@@ -24,7 +24,7 @@ function Signup() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: `firebase_user_id=${uid}`, 
+        body: JSON.stringify({ firebase_user_id: uid }), 
       });
   
       if (!response.ok) {
