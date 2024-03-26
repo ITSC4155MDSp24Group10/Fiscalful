@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import "./App.css"; Maybe not needed idk if we need it we can grab from the old frontend folder
+import "./app.css";
 import Header from "./Components/Header/Header";
 import Landing from "./Components/Landing/Landing"; 
 import About from "./Components/About/About";
