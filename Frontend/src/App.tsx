@@ -8,6 +8,7 @@ import Contact from "./Components/Contact/Contact";
 import Login from "./Components/Login/Login";
 import Signup from "./Components/Signup/Signup";
 import Dashboard from "./Components/Dashboard/Dashboard";
+import AccessTokenDetails from "./Components/Dashboard/AccessTokenDetails";
 
 function App() {
     return (
@@ -21,7 +22,8 @@ function App() {
                             <Route path="/contact" element={<Contact />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/signup" element={<Signup />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/dashboard" element={<Dashboard />}/>
+                            <Route path="/dashboard/access-token-details/:tokenId" element={<AccessTokenDetails />} />
                         </Routes>
                     </main>
             </Router>
