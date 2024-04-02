@@ -1,14 +1,17 @@
-import React, { useEffect, useContext, useCallback } from "react";
-
+import React, { useEffect, useContext, useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 import Header from "../Headers";
 import Products from "../ProductTypes/Products";
 import Items from "../ProductTypes/Items";
 import Context from "../../Context";
 
 import styles from "../../App.module.scss";
+import AccessTokenDetails from "./AccessTokenDetails";
 
 const App = () => {
-  const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } = useContext(Context);
+  const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } =
+    useContext(Context);
+  const [accessTokens, setAccessTokens] = useState([]);
 
   const getInfo = useCallback(async () => {
     const response = await fetch("/api/info", { method: "POST" });
@@ -17,9 +20,8 @@ const App = () => {
       return { paymentInitiation: false };
     }
     const data = await response.json();
-    const paymentInitiation: boolean = data.products.includes(
-      "payment_initiation"
-    );
+    const paymentInitiation: boolean =
+      data.products.includes("payment_initiation");
     dispatch({
       type: "SET_STATE",
       state: {
@@ -62,36 +64,22 @@ const App = () => {
     },
     [dispatch]
   );
-
   const queryOnComponentLoad = useCallback(async () => {
-    /*
-      Fetch all access_tokens for current user, these tokens will be used to
-      query stuff like transactions on each item.
-
-      DOESN'T HANDLE DUPLICATES, might have to make response a hash set or something to 
-      remove dups
-    */
-    const firebase_user_id = localStorage.getItem('firebase_user_id');
-    const response = await fetch(`/api/get_tokens_for_user?firebase_user_id=${firebase_user_id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
+    const firebase_user_id = localStorage.getItem("firebase_user_id");
+    const response = await fetch(
+      `/api/get_tokens_for_user?firebase_user_id=${firebase_user_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
     const data = await response.json();
-    console.log(data)
-    data.forEach((item: { access_token: string; }) => {
-      console.log(item.access_token);
-    });
-    if (!response.ok) {
-      return;
+    if (response.ok) {
+      setAccessTokens(data);
     }
-  }, [dispatch]);
-
-  useEffect(() => {
-    queryOnComponentLoad();
-  }, [queryOnComponentLoad]);
-
+  }, []);
   useEffect(() => {
     const init = async () => {
       const { paymentInitiation } = await getInfo(); // used to determine which path to take when generating token
@@ -109,17 +97,44 @@ const App = () => {
       generateToken(paymentInitiation);
     };
     init();
-  }, [dispatch, generateToken, getInfo]);
+    queryOnComponentLoad();
+  }, [dispatch, generateToken, getInfo, queryOnComponentLoad]);
+
+  interface AccessToken {
+    access_token: string;
+  }
+
+  const AccessTokenList = ({
+    accessTokens,
+  }: {
+    accessTokens: AccessToken[];
+  }) => {
+    return (
+      <div>
+        <h2>Access Tokens:</h2>
+        <ul>
+          {accessTokens.map((token, index) => (
+            <li key={index}>
+              <Link
+                to={`/dashboard/access-token-details/${token.access_token}`}
+              >
+                {token.access_token}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
 
   return (
     <div className={styles.App}>
       <div className={styles.container}>
         <Header />
+        <AccessTokenList accessTokens={accessTokens} />
         {linkSuccess && (
           <>
-            {isPaymentInitiation && (
-              <Products />
-            )}
+            {isPaymentInitiation && <Products />}
             {isItemAccess && (
               <>
                 <Products />

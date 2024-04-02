@@ -579,7 +579,6 @@ def payment():
 # Retrieve high-level information about an Item
 # https://plaid.com/docs/#retrieve-item
 
-
 @app.route('/api/item', methods=['GET'])
 def item():
     try:
