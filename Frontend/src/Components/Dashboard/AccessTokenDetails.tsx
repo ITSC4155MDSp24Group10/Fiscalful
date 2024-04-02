@@ -59,6 +59,9 @@ const AccessTokenDetails = () => {
   const { tokenId } = useParams<{ tokenId: string }>();
   const [balancesData, setBalancesData] = useState<BalancesResponse | null>(null);
   const [transactionsData, setTransactionsData] = useState<TransactionsResponse | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const transactionsPerPage = 4;
+  
 
   const fetchTransactions = async () => {
     try {
@@ -87,9 +90,17 @@ const AccessTokenDetails = () => {
     fetchBalances();
   }, [tokenId]);
 
+  useEffect(() => {
+    console.log(transactionsData);
+  }, [transactionsData]);
+  
+
   if (!balancesData || !transactionsData) {
     return <div>Loading...</div>;
   }
+
+  const numPages = Math.ceil(transactionsData.latest_transactions.length / transactionsPerPage);
+  const currentTransactions = transactionsData.latest_transactions.slice(currentPage * transactionsPerPage, (currentPage + 1) * transactionsPerPage);
 
   return (
     <section className="token section" id="token">
@@ -100,37 +111,43 @@ const AccessTokenDetails = () => {
         <h3>Accounts:</h3>
         {balancesData.accounts.map((account, index) => (
         <div key={account.account_id}>
-          <p>Name: {account.name}</p>
-          <p>Official Name: {account.official_name}</p>
-          <p>Type: {account.subtype}</p>
+          <p><span className="bold-label">Name:</span> {account.name}</p>
+          <p><span className="bold-label">Official Name:</span> {account.official_name}</p>
+          <p><span className="bold-label">Type:</span> {account.subtype}</p>
           {index < balancesData.accounts.length - 1 && <hr />}
         </div>
         ))}
         <h3>Balances:</h3>
         {balancesData.accounts.map((account, index) => (
         <div key={account.account_id}>
-          <p>Name: {account.name}</p>
-          <p>Available Balance: {account.balances.available}</p>
-          <p>Current Balance: {account.balances.current}</p>
-          <p>Limit: {account.balances.limit ?? "N/A"}</p>
+          <p><span className="bold-label">Name:</span> {account.name}</p>
+          <p><span className="bold-label">Available Balance:</span> {account.balances.available}</p>
+          <p><span className="bold-label">Current Balance:</span> {account.balances.current}</p>
+          <p><span className="bold-label">Limit:</span> {account.balances.limit ?? "N/A"}</p>
           {index < balancesData.accounts.length - 1 && <hr />}
         </div>
         ))}
 
         <h3>Latest Transactions:</h3>
-        {transactionsData.latest_transactions.map((transaction) => (
-          <div key={transaction.transaction_id}>
-            <p>Name: {transaction.name}</p>
-            <p>Amount: ${transaction.amount}</p>
-            <p>Date: {transaction.date}</p>
-            <p>Merchant Name: {transaction.merchant_name ?? "N/A"}</p>
-            <p>Category: {transaction.category.join(", ")}</p>
-            <p>Pending: {transaction.pending ? "Yes" : "No"}</p>
-            <hr />
+        <div className="transactions-container">
+          {currentTransactions.map((transaction) => (
+          <div key={transaction.transaction_id} className="transaction-card">
+            <p><span className="bold-label">Name:</span> {transaction.name}</p>
+            <p><span className="bold-label">Amount:</span> ${transaction.amount}</p>
+            <p><span className="bold-label">Date:</span> {transaction.date}</p>
+            <p><span className="bold-label">Merchant Name:</span> {transaction.merchant_name ?? "N/A"}</p>
+            <p><span className="bold-label">Category:</span> {transaction.category.join(", ")}</p>
+            <p><span className="bold-label">Pending:</span> {transaction.pending ? "Yes" : "No"}</p>
+          </div> 
+          ))}
+        </div>
+
+        <div>
+          <button onClick={() => setCurrentPage((oldPage) => Math.max(oldPage - 1, 0))}>Previous Page</button>
+          <button onClick={() => setCurrentPage((oldPage) => Math.min(oldPage + 1, numPages - 1))}>Next Page</button>
+        </div>
       </div>
-      ))}
-    </div>
-   </section>
+    </section>
   );
 };
 
