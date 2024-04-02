@@ -1,0 +1,19 @@
+.token__title {
+    text-align: center;
+    margin-top: 8rem;
+    margin-bottom: 0rem;
+}
+
+.token__subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h3 {
+    margin-left: 3rem;
+}
+
+hr {
+    width: 90%;
+}
