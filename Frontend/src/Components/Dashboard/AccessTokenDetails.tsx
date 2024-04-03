@@ -108,27 +108,36 @@ const AccessTokenDetails = () => {
         <h1 className="token__title">User Accounts</h1>
         <span className="token__subtitle">Account Details</span>
 
-        <h3>Accounts:</h3>
-        {balancesData.accounts.map((account, index) => (
-        <div key={account.account_id}>
-          <p><span className="bold-label">Name:</span> {account.name}</p>
-          <p><span className="bold-label">Official Name:</span> {account.official_name}</p>
-          <p><span className="bold-label">Type:</span> {account.subtype}</p>
-          {index < balancesData.accounts.length - 1 && <hr />}
-        </div>
-        ))}
-        <h3>Balances:</h3>
-        {balancesData.accounts.map((account, index) => (
-        <div key={account.account_id}>
-          <p><span className="bold-label">Name:</span> {account.name}</p>
-          <p><span className="bold-label">Available Balance:</span> {account.balances.available}</p>
-          <p><span className="bold-label">Current Balance:</span> {account.balances.current}</p>
-          <p><span className="bold-label">Limit:</span> {account.balances.limit ?? "N/A"}</p>
-          {index < balancesData.accounts.length - 1 && <hr />}
-        </div>
-        ))}
+        <div className="parent-container">
+          <div>
+            <h3>Accounts</h3>
+            <div className="accounts-container">
+              {balancesData.accounts.map((account, index) => (
+              <div key={account.account_id} className="account-card">
+                <p><span className="bold-label">Name:</span> {account.name}</p>
+                <p><span className="bold-label">Official Name:</span> {account.official_name}</p>
+                <p><span className="bold-label">Type:</span> {account.subtype}</p>
+              </div>
+              ))}
+            </div>
+          </div>
 
-        <h3>Latest Transactions:</h3>
+          <div>
+            <h3>Balances</h3>
+            <div className="balances-container">
+              {balancesData.accounts.map((account, index) => (
+              <div key={account.account_id} className="balance-card">
+                <p><span className="bold-label">Name:</span> {account.name}</p>
+                <p><span className="bold-label">Available Balance:</span> {account.balances.available}</p>
+                <p><span className="bold-label">Current Balance:</span> {account.balances.current}</p>
+                <p><span className="bold-label">Limit:</span> {account.balances.limit ?? "N/A"}</p>
+              </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <h3>Latest Transactions</h3>
         <div className="transactions-container">
           {currentTransactions.map((transaction) => (
           <div key={transaction.transaction_id} className="transaction-card">
@@ -142,9 +151,9 @@ const AccessTokenDetails = () => {
           ))}
         </div>
 
-        <div>
-          <button onClick={() => setCurrentPage((oldPage) => Math.max(oldPage - 1, 0))}>Previous Page</button>
-          <button onClick={() => setCurrentPage((oldPage) => Math.min(oldPage + 1, numPages - 1))}>Next Page</button>
+        <div className="button-container">
+          <button className="page-button" onClick={() => setCurrentPage((oldPage) => Math.max(oldPage - 1, 0))}>Previous Page</button>
+          <button className="page-button" onClick={() => setCurrentPage((oldPage) => Math.min(oldPage + 1, numPages - 1))}>Next Page</button>
         </div>
       </div>
     </section>
