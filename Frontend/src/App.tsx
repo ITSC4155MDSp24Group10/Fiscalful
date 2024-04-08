@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { auth, signOut } from '../../frontend/src/firebase';
 import "./app.css";
 import Header from "./Components/Header/Header";
 import Landing from "./Components/Landing/Landing"; 
@@ -17,6 +18,9 @@ function ProtectedDashboard() {
 }
 
 function App() {
+    useEffect(() => {
+        signOut(auth);
+    }, []);
     return (
         <>
             <AuthProvider>
