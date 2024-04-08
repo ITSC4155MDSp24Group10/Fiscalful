@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import { useAuth } from "../Header/AuthContext";
 import "../Dashboard/token.css";
 
 interface BalancesResponse {
@@ -61,7 +64,9 @@ const AccessTokenDetails = () => {
   const [transactionsData, setTransactionsData] = useState<TransactionsResponse | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const transactionsPerPage = 4;
-  
+  const navigate = useNavigate();
+  const { setIsUserLoggedIn } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const fetchTransactions = async () => {
     try {
@@ -85,6 +90,17 @@ const AccessTokenDetails = () => {
     }
   };
 
+  const handleLogout = async () => { 
+    try {
+      await signOut(auth); // log out the user from Firebase
+      setIsUserLoggedIn(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+
   useEffect(() => {
     fetchTransactions();
     fetchBalances();
@@ -107,6 +123,21 @@ const AccessTokenDetails = () => {
       <div className='token-container'>
         <h1 className="token__title">User Accounts</h1>
         <span className="token__subtitle">Account Details</span>
+
+        <div className="logout-button-container">
+          <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>Logout</button>
+        </div>
+
+        {showLogoutModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Confirm Logout</h2>
+              <p>Are you sure you want to log out?</p>
+              <button className="yes" onClick={handleLogout}>Yes</button>
+              <button className="no" onClick={() => setShowLogoutModal(false)}>No</button>
+            </div>
+          </div>
+        )}
 
         <div className="parent-container">
           <div>
