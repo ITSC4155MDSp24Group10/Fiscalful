@@ -67,6 +67,7 @@ const AccessTokenDetails = () => {
   const navigate = useNavigate();
   const { setIsUserLoggedIn } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
 
   const fetchTransactions = async () => {
     try {
@@ -100,6 +101,14 @@ const AccessTokenDetails = () => {
     }
   };
 
+  const handleConnect = async () => {
+    try {
+      setIsUserLoggedIn(true);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error connecting:', error);
+    }
+  };
 
   useEffect(() => {
     fetchTransactions();
@@ -124,8 +133,23 @@ const AccessTokenDetails = () => {
         <h1 className="token__title">User Accounts</h1>
         <span className="token__subtitle">Account Details</span>
 
-        <div className="logout-button-container">
-          <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>Logout</button>
+        <div className="connect-container">
+          <button className="connect-btn" onClick={() => setShowConnectModal(true)}>Connect Another Account</button>
+        </div>
+
+        {showConnectModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Confirm Connect</h2>
+              <p>Are you sure you want to connect another bank account?</p>
+              <button className="yes" onClick={handleConnect}>Yes</button>
+              <button className="no" onClick={() => setShowConnectModal(false)}>No</button>
+            </div>
+          </div>
+        )}
+
+        <div className="connect-container">
+        <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>Logout</button>
         </div>
 
         {showLogoutModal && (

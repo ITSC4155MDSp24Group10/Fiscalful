@@ -121,7 +121,7 @@ h3 {
     margin-top: -2rem;
 }
 
-.logout-btn {
+.logout-btn, .connect-btn {
     background-color: #333;
     color: white;
     padding: 1rem 2rem;
@@ -131,13 +131,17 @@ h3 {
     margin-top: 2rem;
 }
 
-.logout-btn:hover {
+.logout-btn:hover, .connect-btn:hover {
     background-color: #444;
 }
 
-.logout-button-container {
+.connect-container, .logout-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+
+.logout-btn {
+    margin-top: 1rem;
 }
