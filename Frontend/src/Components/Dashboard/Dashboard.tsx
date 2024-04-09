@@ -4,9 +4,10 @@ import Header from "../Headers";
 import Products from "../ProductTypes/Products";
 import Items from "../ProductTypes/Items";
 import Context from "../../Context";
-
 import styles from "../../App.module.scss";
 import AccessTokenDetails from "./AccessTokenDetails";
+import "../Dashboard/dashboard.css";
+
 
 const App = () => {
   const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } =
@@ -111,14 +112,15 @@ const App = () => {
   }) => {
     return (
       <div>
-        <h2>Access Tokens:</h2>
-        <ul>
+        <h2 className="account-title">Accounts</h2>
+        <ul className="account-list">
           {accessTokens.map((token, index) => (
             <li key={index}>
               <Link
                 to={`/dashboard/access-token-details/${token.access_token}`}
+                className="account-link"
               >
-                {token.access_token}
+                {`Account ${index + 1}`}
               </Link>
             </li>
           ))}
