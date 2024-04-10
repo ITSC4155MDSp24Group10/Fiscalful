@@ -6,8 +6,7 @@ import Items from "../ProductTypes/Items";
 import Context from "../../Context";
 import styles from "../../App.module.scss";
 import AccessTokenDetails from "./AccessTokenDetails";
-import "../Dashboard/dashboard.css";
-
+import "../Dashboard/dashboard.css"
 
 const App = () => {
   const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } =
@@ -113,12 +112,11 @@ const App = () => {
     return (
       <div>
         <h2 className="account-title">Accounts</h2>
-        <ul className="account-list">
+        <ul>
           {accessTokens.map((token, index) => (
             <li key={index}>
               <Link
                 to={`/dashboard/access-token-details/${token.access_token}`}
-                className="account-link"
               >
                 {`Account ${index + 1}`}
               </Link>
