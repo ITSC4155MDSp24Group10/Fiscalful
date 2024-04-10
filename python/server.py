@@ -84,8 +84,6 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-
-
 def empty_to_none(field):
     value = os.getenv(field)
     if value is None or len(value) == 0:
@@ -622,6 +620,7 @@ def start_worker():
     subprocess.Popen([sys.executable, worker_path, firebase_user_id])
     return 'Worker started for user {}'.format(firebase_user_id)
 
+
 @app.route('/api/item_transactions', methods=['GET'])
 def get_item_transactions():
     cursor = ''
@@ -657,7 +656,6 @@ def get_item_transactions():
         return jsonify(error_response)
 
 
-
 @app.route('/api/ask_chatbot', methods=['GET'])
 def ask_chatbot():
     """
@@ -675,6 +673,87 @@ def ask_chatbot():
         full_prompt = f"{prompt}\n{transaction_history}"
     else:
         return jsonify({'error': 'Document not found'}), 404
+
+@app.route('/api/budget/get', methods=['GET'])
+def get_user_budgets():
+    firebase_user_id = request.args.get('firebase_user_id')
+    try:
+        budget_docs = db.collection("budgets").where("firebase_user_id", "==", firebase_user_id).get()
+        budgets = []
+        for budget_doc in budget_docs:
+            budget_data = budget_doc.to_dict()
+            budget_data['id'] = budget_doc.id
+            budgets.append(budget_data)
+        
+        return jsonify({'success': True, 'budgets': budgets}), 200
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    
+@app.route('/api/budget/create', methods=['POST'])
+def create_budget():
+    amount = request.json.get('amount')
+    category = request.json.get('category')
+    duration = request.json.get('duration')
+    firebase_user_id = request.json.get('firebase_user_id')
+    budget_data = {
+        'amount': amount,
+        'category': category,
+        'duration': duration,
+        'firebase_user_id': firebase_user_id
+    }
+    try:
+        budget_ref = db.collection("budgets").add(budget_data)
+        budget_id = budget_ref[1].id
+        return jsonify({'success': True, 'budget_id': budget_id}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/budget/delete', methods=['POST'])
+def delete_budget():
+    budget_id = request.json.get('budget_id')
+    firebase_user_id = request.json.get('firebase_user_id')
+
+    try:
+        budget_ref = db.collection("budgets").document(budget_id)
+
+        budget_doc = budget_ref.get()
+
+        if budget_doc.exists and budget_doc.to_dict().get('firebase_user_id') == firebase_user_id:
+            budget_ref.delete()
+            return jsonify({'success': True, 'message': 'Budget deleted successfully'}), 200
+        else:
+            return jsonify({'success': False, 'error': 'Budget not found or unauthorized access'}), 404
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/budget/edit', methods=['POST'])
+def edit_budget():
+    budget_id = request.json.get('budget_id')
+    firebase_user_id = request.json.get('firebase_user_id')
+    amount = request.json.get('amount')
+    category = request.json.get('category')
+    duration = request.json.get('duration')
+
+    try:
+        budget_ref = db.collection("budgets").document(budget_id)
+
+        budget_doc = budget_ref.get()
+        if budget_doc.exists and budget_doc.to_dict().get('firebase_user_id') == firebase_user_id:
+            budget_ref.update({
+                'amount': amount,
+                'category': category,
+                'duration': duration
+            })
+            return jsonify({'success': True, 'message': 'Budget updated successfully'}), 200
+        else:
+            return jsonify({'success': False, 'error': 'Budget not found or unauthorized access'}), 404
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 def pretty_print_response(response):
