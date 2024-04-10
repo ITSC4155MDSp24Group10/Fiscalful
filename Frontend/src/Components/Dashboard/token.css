@@ -1,0 +1,147 @@
+.token__title {
+    text-align: center;
+    margin-top: 8rem;
+    margin-bottom: 0rem;
+}
+
+.token__subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h3 {
+    text-align: center;
+}
+
+.parent-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.accounts-container,
+.balances-container {
+    border: 4px solid black;
+    display: flex;
+    flex-wrap: wrap;  
+    border-radius: 1rem;
+    margin: 2rem;
+    margin-left: 4rem;
+    margin-right: 4rem;
+    width: 600px;
+    height: 65%;
+}
+
+.account-card,
+.balance-card {
+    padding: 10px;
+    margin: 10px;
+    flex: 1 0 0;
+}
+
+.transactions-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border: 4px solid black;
+    margin: 2rem;
+    margin-left: 4rem;
+    margin-right: 4rem;
+    border-radius: 1rem;
+}
+  
+.transaction-card {
+    flex: 0 0 calc(25% - 20px) !important;
+    padding: 0.5rem;
+    margin: 1rem;
+}
+
+.bold-label {
+    font-weight: bold;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+  
+.page-button {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background-color: #333;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+  
+.page-button:hover {
+    background-color: #444;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 500px;
+    text-align: center;
+}
+
+.yes, .no {
+    background-color: #333;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin: 1rem;
+}
+
+.yes:hover, .no:hover {
+    background-color: #444;
+}
+
+.modal p {
+    margin-top: -2rem;
+}
+
+.logout-btn, .connect-btn {
+    background-color: #333;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin-top: 2rem;
+}
+
+.logout-btn:hover, .connect-btn:hover {
+    background-color: #444;
+}
+
+.connect-container, .logout-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.logout-btn {
+    margin-top: 1rem;
+}

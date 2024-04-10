@@ -9,13 +9,15 @@
 }
 
 .title {
-  margin-top: 9 * $unit;
+  text-align: center;
+  margin-top: 8rem;
   margin-bottom: 0;
   font-weight: 800;
   height: 6 * $unit;
 }
 
 .subtitle {
+  text-align: center;
   margin-top: 0;
   margin-bottom: 3 * $unit;
 }
@@ -24,10 +26,14 @@
   width: 100%;
   font-size: 2 * $unit;
   margin: 2 * $unit 0;
+  text-align: center;
 }
 
 .linkButton {
   margin-top: 3 * $unit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .itemAccessContainer {

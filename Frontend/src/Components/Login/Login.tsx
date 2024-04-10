@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Add useNavigate
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,7 +15,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Add this line
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -41,7 +41,8 @@ function Login() {
         throw new Error("Failed to start worker");
       }
       localStorage.setItem('firebase_user_id', uid); // store uid in local storage for authentication
-      navigate('/dashboard');
+
+      navigate('/dashboard'); // Add this line
     } catch (error) {
       setError('Email and password combination do not match!');
       console.log(error);

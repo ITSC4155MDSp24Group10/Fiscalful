@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import { useAuth } from "../Header/AuthContext";
+import "../Dashboard/token.css";
 
 interface BalancesResponse {
   accounts: Account[];
@@ -10,10 +14,8 @@ interface BalancesResponse {
 interface Account {
   account_id: string;
   balances: Balances;
-  mask: string;
   name: string;
   official_name: string;
-  persistent_account_id: string;
   subtype: string;
   type: string;
 }
@@ -23,7 +25,6 @@ interface Balances {
   current: number;
   iso_currency_code: string;
   limit: number | null;
-  unofficial_currency_code: string | null;
 }
 
 interface Item {
@@ -46,75 +47,27 @@ interface Transaction {
   account_id: string;
   account_owner: string | null;
   amount: number;
-  authorized_date: string;
-  authorized_datetime: string | null;
   category: string[];
   category_id: string;
-  check_number: string | null;
-  counterparties: Counterparty[];
   date: string;
-  datetime: string | null;
   iso_currency_code: string;
-  location: Location;
-  logo_url: string | null;
-  merchant_entity_id: string | null;
   merchant_name: string | null;
   name: string;
-  payment_channel: string;
-  payment_meta: PaymentMeta;
   pending: boolean;
-  pending_transaction_id: string | null;
-  personal_finance_category: PersonalFinanceCategory;
-  personal_finance_category_icon_url: string;
-  transaction_code: string | null;
   transaction_id: string;
   transaction_type: string;
-  unofficial_currency_code: string | null;
-  website: string | null;
-}
-
-interface Counterparty {
-  confidence_level: string;
-  entity_id: string | null;
-  logo_url: string | null;
-  name: string;
-  phone_number: string | null;
-  type: string;
-  website: string | null;
-}
-
-interface Location {
-  address: string | null;
-  city: string | null;
-  country: string | null;
-  lat: number | null;
-  lon: number | null;
-  postal_code: string | null;
-  region: string | null;
-  store_number: string | null;
-}
-
-interface PaymentMeta {
-  by_order_of: string | null;
-  payee: string | null;
-  payer: string | null;
-  payment_method: string | null;
-  payment_processor: string | null;
-  ppd_id: string | null;
-  reason: string | null;
-  reference_number: string | null;
-}
-
-interface PersonalFinanceCategory {
-  confidence_level: string;
-  detailed: string;
-  primary: string;
 }
 
 const AccessTokenDetails = () => {
   const { tokenId } = useParams<{ tokenId: string }>();
   const [balancesData, setBalancesData] = useState<BalancesResponse | null>(null);
   const [transactionsData, setTransactionsData] = useState<TransactionsResponse | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const transactionsPerPage = 4;
+  const navigate = useNavigate();
+  const { setIsUserLoggedIn } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
 
   const fetchTransactions = async () => {
     try {
@@ -138,56 +91,127 @@ const AccessTokenDetails = () => {
     }
   };
 
+  const handleLogout = async () => { 
+    try {
+      await signOut(auth); // log out the user from Firebase
+      setIsUserLoggedIn(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  const handleConnect = async () => {
+    try {
+      setIsUserLoggedIn(true);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error connecting:', error);
+    }
+  };
+
   useEffect(() => {
     fetchTransactions();
     fetchBalances();
   }, [tokenId]);
 
+  useEffect(() => {
+    console.log(transactionsData);
+  }, [transactionsData]);
+  
+
   if (!balancesData || !transactionsData) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <div>
-      <h3>Access Token Details:</h3>
-      <p>Token: {tokenId}</p>
+  const numPages = Math.ceil(transactionsData.latest_transactions.length / transactionsPerPage);
+  const currentTransactions = transactionsData.latest_transactions.slice(currentPage * transactionsPerPage, (currentPage + 1) * transactionsPerPage);
 
-      <h4>Accounts:</h4>
-      {balancesData.accounts.map((account) => (
-        <div key={account.account_id}>
-          <p>Account ID: {account.account_id}</p>
-          <p>Name: {account.name}</p>
-          <p>Official Name: {account.official_name}</p>
-          <p>Type: {account.type}</p>
-          <p>Subtype: {account.subtype}</p>
-          <p>Mask: {account.mask}</p>
-          <p>Persistent Account ID: {account.persistent_account_id}</p>
+  return (
+    <section className="token section" id="token">
+      <div className='token-container'>
+        <h1 className="token__title">User Accounts</h1>
+        <span className="token__subtitle">Account Details</span>
+
+        <div className="connect-container">
+          <button className="connect-btn" onClick={() => setShowConnectModal(true)}>Connect Another Account</button>
+        </div>
+
+        {showConnectModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Confirm Connect</h2>
+              <p>Are you sure you want to connect another bank account?</p>
+              <button className="yes" onClick={handleConnect}>Yes</button>
+              <button className="no" onClick={() => setShowConnectModal(false)}>No</button>
+            </div>
+          </div>
+        )}
+
+        <div className="connect-container">
+        <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>Logout</button>
+        </div>
+
+        {showLogoutModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Confirm Logout</h2>
+              <p>Are you sure you want to log out?</p>
+              <button className="yes" onClick={handleLogout}>Yes</button>
+              <button className="no" onClick={() => setShowLogoutModal(false)}>No</button>
+            </div>
+          </div>
+        )}
+
+        <div className="parent-container">
           <div>
-            <h5>Balances:</h5>
-            <p>Available: {account.balances.available}</p>
-            <p>Current: {account.balances.current}</p>
-            <p>ISO Currency Code: {account.balances.iso_currency_code}</p>
-            <p>Limit: {account.balances.limit ?? "N/A"}</p>
-            <p>Unofficial Currency Code: {account.balances.unofficial_currency_code ?? "N/A"}</p>
+            <h3>Accounts</h3>
+            <div className="accounts-container">
+              {balancesData.accounts.map((account, index) => (
+              <div key={account.account_id} className="account-card">
+                <p><span className="bold-label">Name:</span> {account.name}</p>
+                <p><span className="bold-label">Official Name:</span> {account.official_name}</p>
+                <p><span className="bold-label">Type:</span> {account.subtype}</p>
+              </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3>Balances</h3>
+            <div className="balances-container">
+              {balancesData.accounts.map((account, index) => (
+              <div key={account.account_id} className="balance-card">
+                <p><span className="bold-label">Name:</span> {account.name}</p>
+                <p><span className="bold-label">Available Balance:</span> {account.balances.available}</p>
+                <p><span className="bold-label">Current Balance:</span> {account.balances.current}</p>
+                <p><span className="bold-label">Limit:</span> {account.balances.limit ?? "N/A"}</p>
+              </div>
+              ))}
+            </div>
           </div>
         </div>
-      ))}
 
-      <h4>Latest Transactions:</h4>
-      {transactionsData.latest_transactions.map((transaction) => (
-        <div key={transaction.transaction_id}>
-          <p>Transaction ID: {transaction.transaction_id}</p>
-          <p>Account ID: {transaction.account_id}</p>
-          <p>Amount: {transaction.amount}</p>
-          <p>Date: {transaction.date}</p>
-          <p>Name: {transaction.name}</p>
-          <p>Merchant Name: {transaction.merchant_name ?? "N/A"}</p>
-          <p>Category: {transaction.category.join(", ")}</p>
-          <p>Payment Channel: {transaction.payment_channel}</p>
-          <p>Pending: {transaction.pending ? "Yes" : "No"}</p>
+        <h3>Latest Transactions</h3>
+        <div className="transactions-container">
+          {currentTransactions.map((transaction) => (
+          <div key={transaction.transaction_id} className="transaction-card">
+            <p><span className="bold-label">Name:</span> {transaction.name}</p>
+            <p><span className="bold-label">Amount:</span> ${transaction.amount}</p>
+            <p><span className="bold-label">Date:</span> {transaction.date}</p>
+            <p><span className="bold-label">Merchant Name:</span> {transaction.merchant_name ?? "N/A"}</p>
+            <p><span className="bold-label">Category:</span> {transaction.category.join(", ")}</p>
+            <p><span className="bold-label">Pending:</span> {transaction.pending ? "Yes" : "No"}</p>
+          </div> 
+          ))}
         </div>
-      ))}
-    </div>
+
+        <div className="button-container">
+          <button className="page-button" onClick={() => setCurrentPage((oldPage) => Math.max(oldPage - 1, 0))}>Previous Page</button>
+          <button className="page-button" onClick={() => setCurrentPage((oldPage) => Math.min(oldPage + 1, numPages - 1))}>Next Page</button>
+        </div>
+      </div>
+    </section>
   );
 };
 
