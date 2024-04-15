@@ -680,13 +680,16 @@ def get_user_budgets():
     try:
         budget_docs = db.collection("budgets").where("firebase_user_id", "==", firebase_user_id).get()
         budgets = []
-        for budget_doc in budget_docs:
-            budget_data = budget_doc.to_dict()
-            budget_data['id'] = budget_doc.id
-            budgets.append(budget_data)
-        
-        return jsonify({'success': True, 'budgets': budgets}), 200
-    
+
+        if budget_docs:
+            for budget_doc in budget_docs:
+                budget_data = budget_doc.to_dict()
+                budget_data['id'] = budget_doc.id
+                budgets.append(budget_data)
+
+            return jsonify({'success': True, 'budgets': budgets}), 200
+        else:
+            return jsonify({'success': False, 'error': 'No budgets found for the user'}), 404
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
     
@@ -746,15 +749,14 @@ def edit_budget():
 
         if budget_doc.exists and budget_doc.to_dict().get('firebase_user_id') == firebase_user_id:
             budget_data = budget_doc.to_dict()
-            history = budget_data.get('history', [])  
-            old_amount = budget_data.get("amount")
+            history = budget_data.get('history', [])
+            history.append(amount)
             old_category = budget_data.get("category")
             old_duration = budget_data.get("duration")
             budget_ref.update({
-                'amount': amount if amount else old_amount,
                 'category': category if category else old_category,
                 'duration': duration if duration else old_duration,
-                'history': history  
+                'history': history
             })
 
             return jsonify({'success': True, 'message': 'Budget updated successfully'}), 200
@@ -762,7 +764,7 @@ def edit_budget():
             return jsonify({'success': False, 'error': 'Budget not found or unauthorized access'}), 404
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
-    
+
 
 def pretty_print_response(response):
     print(json.dumps(response, indent=2, sort_keys=True, default=str))
