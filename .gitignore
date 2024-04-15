@@ -51,3 +51,4 @@ docker-compose.local*.yml
 
 #vscode
 .vscode
+__pycache__/server.cpython-311.pyc
