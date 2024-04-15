@@ -680,13 +680,16 @@ def get_user_budgets():
     try:
         budget_docs = db.collection("budgets").where("firebase_user_id", "==", firebase_user_id).get()
         budgets = []
-        for budget_doc in budget_docs:
-            budget_data = budget_doc.to_dict()
-            budget_data['id'] = budget_doc.id
-            budgets.append(budget_data)
-        
-        return jsonify({'success': True, 'budgets': budgets}), 200
-    
+
+        if budget_docs:
+            for budget_doc in budget_docs:
+                budget_data = budget_doc.to_dict()
+                budget_data['id'] = budget_doc.id
+                budgets.append(budget_data)
+
+            return jsonify({'success': True, 'budgets': budgets}), 200
+        else:
+            return jsonify({'success': False, 'error': 'No budgets found for the user'}), 404
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
     
@@ -695,12 +698,14 @@ def create_budget():
     amount = request.json.get('amount')
     category = request.json.get('category')
     duration = request.json.get('duration')
+    history = []
     firebase_user_id = request.json.get('firebase_user_id')
     budget_data = {
         'amount': amount,
         'category': category,
         'duration': duration,
-        'firebase_user_id': firebase_user_id
+        'firebase_user_id': firebase_user_id,
+        'history': history
     }
     try:
         budget_ref = db.collection("budgets").add(budget_data)
@@ -735,23 +740,31 @@ def edit_budget():
     budget_id = request.json.get('budget_id')
     firebase_user_id = request.json.get('firebase_user_id')
     amount = request.json.get('amount')
+    change = request.json.get('change')
     category = request.json.get('category')
     duration = request.json.get('duration')
 
     try:
         budget_ref = db.collection("budgets").document(budget_id)
-
         budget_doc = budget_ref.get()
+
         if budget_doc.exists and budget_doc.to_dict().get('firebase_user_id') == firebase_user_id:
+            budget_data = budget_doc.to_dict()
+            history = budget_data.get('history', [])
+            history.append(change)
+            old_amount = budget_data.get("amount")
+            old_category = budget_data.get("category")
+            old_duration = budget_data.get("duration")
             budget_ref.update({
-                'amount': amount,
-                'category': category,
-                'duration': duration
+                'amount': amount if amount else old_amount,
+                'category': category if category else old_category,
+                'duration': duration if duration else old_duration,
+                'history': history
             })
+
             return jsonify({'success': True, 'message': 'Budget updated successfully'}), 200
         else:
             return jsonify({'success': False, 'error': 'Budget not found or unauthorized access'}), 404
-
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
