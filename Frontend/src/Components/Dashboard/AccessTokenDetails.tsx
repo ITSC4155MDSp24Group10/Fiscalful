@@ -286,19 +286,19 @@ const AccessTokenDetails = () => {
             <div className="modal-content-c">
               <h2 className="modal-h2">Create An Expense</h2>
               <form onSubmit={create_budget}>
-                <label>
-                  Category:
+                <label className="label">
+                  <span>Category:</span>
                   <input type="text" value={category} onChange={handleCategoryChange} required/>
                 </label>
-                <label>
-                  Amount:
-                  <input type="number" value={amount} onChange={handleAmountChange} required/>
+                <label className="label">
+                  <span>Amount:</span>
+                  <input type="number" value={amount || ''} onChange={handleAmountChange} required/>
                 </label>
-                <label>
-                  Duration:
+                <label className="label">
+                  <span>Duration:</span>
                   <input type="text" value={duration} onChange={handleDurationChange} required/>
                 </label>
-                <input type="submit" value="Create Expense" className="yes" />
+                <input type="submit" value="Create Expense" className="yes-" />
               </form>
               <button className="no" onClick={() => setShowCreateBudgetModal(false)}>Cancel</button>
             </div>

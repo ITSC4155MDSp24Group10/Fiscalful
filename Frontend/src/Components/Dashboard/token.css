@@ -140,6 +140,17 @@ h3 {
     margin: 1rem;
 }
 
+.yes- {
+    background-color: #333;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin: 1rem;
+    margin-top: 3rem;
+}
+
 .yes:hover, .no:hover {
     background-color: #444;
 }
@@ -188,4 +199,25 @@ h3 {
     border-top: 1px solid #000;
     padding-top: 10px;
     margin-top: 10px;
+}
+
+.label {
+    font-weight: bold;
+    display: block;
+}
+
+.label span {
+    margin-right: 1rem;
+}
+
+.label input {
+    width: 200px;
+    height: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid #333;
 }
