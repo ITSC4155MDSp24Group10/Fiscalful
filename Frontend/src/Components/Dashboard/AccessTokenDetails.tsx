@@ -59,7 +59,7 @@ interface Transaction {
 }
 
 interface BudgetResponse {
-  latest_budget: Budget[];
+  budgets: Budget[];
 }
 
 interface Budget {
@@ -81,10 +81,12 @@ const AccessTokenDetails = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [showCreateBudgetModal, setShowCreateBudgetModal] = useState(false);
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState(0);
   const [duration, setDuration] = useState('');  
   const [history] = useState([]);
+  const [firebaseUserId, setFirebaseUserId] = useState(localStorage.getItem('firebase_user_id') || '');
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategory(event.target.value);
@@ -97,6 +99,10 @@ const AccessTokenDetails = () => {
   const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDuration(event.target.value);
   };
+
+  useEffect(() => {
+    localStorage.setItem('firebase_user_id', firebaseUserId);
+  }, [firebaseUserId]);
 
   const fetchTransactions = async () => {
     try {
@@ -131,7 +137,7 @@ const AccessTokenDetails = () => {
           amount: amount,
           category: category,
           duration: duration,
-          firebase_user_id: "1",
+          firebase_user_id: firebaseUserId,
           history: history
         }),
       });
@@ -140,6 +146,48 @@ const AccessTokenDetails = () => {
       setBudgetData(data);
     } catch (error) {
       console.error("Error creating budget:", error);
+    }
+  };
+
+  const delete_budget = async (budgetId: string) => {
+    try {
+      const response = await fetch(`/api/budget/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          budget_id: budgetId,
+          firebase_user_id: firebaseUserId,
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        console.log("Budget deleted successfully");
+        setBudgetData(data);
+      }
+    } catch (error) {
+      console.error("Error deleting budget:", error);
+    }
+  };
+  
+  const get_user_budgets = async (firebaseUserId: string): Promise<void> => {
+    try {
+      const response = await fetch(`/api/budget/get?firebase_user_id=${firebaseUserId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log("User's budgets:", data);
+      if (data.success) {
+        setBudgetData(data);
+      } else {
+        console.error("Error getting budgets:", data.error);
+      }
+    } catch (error) {
+      console.error("Error getting budgets:", error);
     }
   };
 
@@ -170,7 +218,18 @@ const AccessTokenDetails = () => {
   useEffect(() => {
     console.log(transactionsData);
   }, [transactionsData]);
+
+  useEffect(() => {
+      get_user_budgets(firebaseUserId);
+  }, [showBudgetModal, firebaseUserId]);
   
+  useEffect(() => {
+    if (showCreateBudgetModal || showBudgetModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [showCreateBudgetModal || showBudgetModal]);
 
   if (!balancesData || !transactionsData) {
     return <div>Loading...</div>;
@@ -201,28 +260,47 @@ const AccessTokenDetails = () => {
         )}
 
         <div className="connect-container">
-          <button className="budget-btn" onClick={() => setShowBudgetModal(true)}>Budget</button>
+          <button className="logout-btn" onClick={() => setShowBudgetModal(true)}>Budget</button>
         </div>
 
         {showBudgetModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h2>Create A Budget</h2>
-              <p>Create a monthly budget</p>
-              <label>
-                Item Name:
-                <input type="text" name="itemName" onChange={handleCategoryChange} />
-              </label>
-              <label>
-                Amount: $
-                <input type="number" name="amount" onChange={handleAmountChange} />
-              </label>
-              <label>
-                Duration:
-                <input type="text" name="duration" onChange={handleDurationChange} />
-              </label>
+        <div className="modal">
+          <div className="modal-content">
+            <h2 className="modal-h2">Your Expenses</h2>
+            {budgetData && budgetData.budgets && budgetData.budgets.map((budget: Budget, index: number) => (
+              <div key={index} className="budget-item">
+                <p className="budget-detail"><span className="budget-label">Category:</span> {budget.category}</p>
+                <p className="budget-detail"><span className="budget-label">Duration:</span> {budget.duration}</p>
+                <p className="budget-detail"><span className="budget-label">Amount:</span> ${budget.amount}</p>
+              </div>
+              ))}
+              <p className="budget-total"><span className="budget-label">Total:</span> ${budgetData && budgetData.budgets && budgetData.budgets.reduce((total, budget) => total + budget.amount, 0)}</p>
+              <button className="yes" onClick={() => setShowCreateBudgetModal(true)}>Create Expense</button>
               <button className="no" onClick={() => setShowBudgetModal(false)}>Cancel</button>
-              <button className="yes" onClick={create_budget}>Create</button>
+            </div>
+          </div>
+        )}
+
+        {showCreateBudgetModal && (
+          <div className="modal-c">
+            <div className="modal-content-c">
+              <h2 className="modal-h2">Create An Expense</h2>
+              <form onSubmit={create_budget}>
+                <label>
+                  Category:
+                  <input type="text" value={category} onChange={handleCategoryChange} required/>
+                </label>
+                <label>
+                  Amount:
+                  <input type="number" value={amount} onChange={handleAmountChange} required/>
+                </label>
+                <label>
+                  Duration:
+                  <input type="text" value={duration} onChange={handleDurationChange} required/>
+                </label>
+                <input type="submit" value="Create Expense" className="yes" />
+              </form>
+              <button className="no" onClick={() => setShowCreateBudgetModal(false)}>Cancel</button>
             </div>
           </div>
         )}
