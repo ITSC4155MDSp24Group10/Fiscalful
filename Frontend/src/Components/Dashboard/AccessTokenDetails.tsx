@@ -58,16 +58,45 @@ interface Transaction {
   transaction_type: string;
 }
 
+interface BudgetResponse {
+  latest_budget: Budget[];
+}
+
+interface Budget {
+  amount: number,
+  category: string,
+  duration: string,
+  firebase_user_id: string,
+}
+
 const AccessTokenDetails = () => {
   const { tokenId } = useParams<{ tokenId: string }>();
   const [balancesData, setBalancesData] = useState<BalancesResponse | null>(null);
   const [transactionsData, setTransactionsData] = useState<TransactionsResponse | null>(null);
+  const [budgetData, setBudgetData] = useState<BudgetResponse | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const transactionsPerPage = 4;
   const navigate = useNavigate();
   const { setIsUserLoggedIn } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
+  const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [category, setCategory] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [duration, setDuration] = useState('');  
+  const [history] = useState([]);
+
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCategory(event.target.value);
+  };
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(Number(event.target.value));
+  };
+
+  const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDuration(event.target.value);
+  };
 
   const fetchTransactions = async () => {
     try {
@@ -88,6 +117,29 @@ const AccessTokenDetails = () => {
       setBalancesData(data);
     } catch (error) {
       console.error("Error fetching balances:", error);
+    }
+  };
+
+  const create_budget = async () => {
+    try {
+      const response = await fetch(`/api/budget/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: amount,
+          category: category,
+          duration: duration,
+          firebase_user_id: "1",
+          history: history
+        }),
+      });
+      const data: BudgetResponse = await response.json();
+      console.log("Budget response data:", data);
+      setBudgetData(data);
+    } catch (error) {
+      console.error("Error creating budget:", error);
     }
   };
 
@@ -149,7 +201,34 @@ const AccessTokenDetails = () => {
         )}
 
         <div className="connect-container">
-        <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>Logout</button>
+          <button className="budget-btn" onClick={() => setShowBudgetModal(true)}>Budget</button>
+        </div>
+
+        {showBudgetModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Create A Budget</h2>
+              <p>Create a monthly budget</p>
+              <label>
+                Item Name:
+                <input type="text" name="itemName" onChange={handleCategoryChange} />
+              </label>
+              <label>
+                Amount: $
+                <input type="number" name="amount" onChange={handleAmountChange} />
+              </label>
+              <label>
+                Duration:
+                <input type="text" name="duration" onChange={handleDurationChange} />
+              </label>
+              <button className="no" onClick={() => setShowBudgetModal(false)}>Cancel</button>
+              <button className="yes" onClick={create_budget}>Create</button>
+            </div>
+          </div>
+        )}
+
+        <div className="connect-container">
+          <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>Logout</button>
         </div>
 
         {showLogoutModal && (
