@@ -82,6 +82,7 @@ const AccessTokenDetails = () => {
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
   const [showCreateBudgetModal, setShowCreateBudgetModal] = useState(false);
+  const [showDeleteBudgetModal, setShowDeleteBudgetModal] = useState(false);
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState(0);
   const [duration, setDuration] = useState('');  
@@ -276,7 +277,8 @@ const AccessTokenDetails = () => {
               ))}
               <p className="budget-total"><span className="budget-label">Total:</span> ${budgetData && budgetData.budgets && budgetData.budgets.reduce((total, budget) => total + budget.amount, 0)}</p>
               <button className="yes" onClick={() => setShowCreateBudgetModal(true)}>Create Expense</button>
-              <button className="no" onClick={() => setShowBudgetModal(false)}>Cancel</button>
+              <button className="yes" onClick={() => setShowDeleteBudgetModal(true)}>Delete Expense</button>
+\              <button className="no" onClick={() => setShowBudgetModal(false)}>Cancel</button>
             </div>
           </div>
         )}
@@ -301,6 +303,24 @@ const AccessTokenDetails = () => {
                 <input type="submit" value="Create Expense" className="yes-" />
               </form>
               <button className="no" onClick={() => setShowCreateBudgetModal(false)}>Cancel</button>
+            </div>
+          </div>
+        )}
+
+        {showDeleteBudgetModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2 className="modal-h2">Your Expenses</h2>
+            {budgetData && budgetData.budgets && budgetData.budgets.map((budget: Budget, index: number) => (
+              <div key={index} className="budget-item">
+                <p className="budget-detail"><span className="budget-label">Category:</span> {budget.category}</p>
+                <p className="budget-detail"><span className="budget-label">Duration:</span> {budget.duration}</p>
+                <p className="budget-detail"><span className="budget-label">Amount:</span> ${budget.amount}</p>
+              </div>
+              ))}
+              <p className="budget-total"><span className="budget-label">Total:</span> ${budgetData && budgetData.budgets && budgetData.budgets.reduce((total, budget) => total + budget.amount, 0)}</p>
+              <button className="yes" onClick={() => delete_budget}>Delete Expense</button>
+              <button className="no" onClick={() => setShowDeleteBudgetModal(false)}>Cancel</button>
             </div>
           </div>
         )}
