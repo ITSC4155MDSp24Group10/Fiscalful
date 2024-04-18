@@ -6,6 +6,7 @@ import { useAuth } from "../Header/AuthContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import "../Dashboard/token.css";
+import { create } from "domain";
 
 interface BalancesResponse {
   accounts: Account[];
@@ -62,6 +63,7 @@ interface Transaction {
 
 interface BudgetResponse {
   budgets: Budget[];
+  success: boolean
 }
 
 interface Budget {
@@ -92,6 +94,7 @@ const AccessTokenDetails = () => {
   const [history] = useState([]);
   const [firebaseUserId, setFirebaseUserId] = useState(localStorage.getItem('firebase_user_id') || '');
   const [deleteCount, setDeleteCount] = useState(0);
+  const [createCount, setCreateCount] = useState(0);
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategory(event.target.value);
@@ -104,6 +107,19 @@ const AccessTokenDetails = () => {
   const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDuration(event.target.value);
   };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await create_budget();
+    
+    setCategory('');
+    setAmount(0);
+    setDuration('');
+    setShowCreateBudgetModal(false);
+    setShowBudgetModal(true);
+
+    get_user_budgets(firebaseUserId);
+  }
 
   useEffect(() => {
     localStorage.setItem('firebase_user_id', firebaseUserId);
@@ -149,6 +165,9 @@ const AccessTokenDetails = () => {
       const data: BudgetResponse = await response.json();
       console.log("Budget response data:", data);
       setBudgetData(data);
+      if (data.success) {
+        setCreateCount(createCount + 1);
+      }
     } catch (error) {
       console.error("Error creating budget:", error);
     }
@@ -258,8 +277,8 @@ const AccessTokenDetails = () => {
         </div>
 
         {showConnectModal && (
-          <div className="modal">
-            <div className="modal-content">
+          <div className="modal-connect">
+            <div className="modal-content-connect">
               <h2>Confirm Connect</h2>
               <p>Are you sure you want to connect another bank account?</p>
               <button className="yes" onClick={handleConnect}>Yes</button>
@@ -295,7 +314,7 @@ const AccessTokenDetails = () => {
           <div className="modal-c">
             <div className="modal-content-c">
               <h2 className="modal-h2">Create An Expense</h2>
-              <form onSubmit={create_budget}>
+              <form onSubmit={handleFormSubmit}>
                 <label className="label">
                   <span>Category:</span>
                   <input type="text" value={category} onChange={handleCategoryChange} required/>
@@ -340,8 +359,8 @@ const AccessTokenDetails = () => {
         </div>
 
         {showLogoutModal && (
-          <div className="modal">
-            <div className="modal-content">
+          <div className="modal-connect">
+            <div className="modal-content-connect">
               <h2>Confirm Logout</h2>
               <p>Are you sure you want to log out?</p>
               <button className="yes" onClick={handleLogout}>Yes</button>

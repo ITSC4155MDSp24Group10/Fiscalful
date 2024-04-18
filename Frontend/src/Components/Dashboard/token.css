@@ -87,6 +87,18 @@ h3 {
     margin-top: 0rem;
 }
 
+.modal-connect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .modal {
     position: fixed;
     top: 0;
@@ -119,6 +131,16 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.modal-content-connect {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 600px;
+    height: 300px;
+    text-align: center;
+    overflow-y: auto;
 }
   
 .modal-content {
