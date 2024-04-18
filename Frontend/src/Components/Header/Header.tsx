@@ -1,22 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useAuth } from './AuthContext';
 import './header.css';
-import { set } from '@firebase/database';
 
 const Header = () => {
-    const location = useLocation();
-    const { isUserLoggedIn, setIsUserLoggedIn } = useAuth();
+  const location = useLocation();
+  const { isUserLoggedIn, setIsUserLoggedIn, isLoading } = useAuth(); // Add isLoading to the destructured variables
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      setIsUserLoggedIn(!!user);
-    });
+    // Set the auth persistence to LOCAL
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        const unsubscribe = onAuthStateChanged(auth, user => {
+          setIsUserLoggedIn(!!user);
+        });
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
+      })
+      .catch((error) => {
+        console.error("Error setting the persistence", error);
+      });
   }, [location, setIsUserLoggedIn]);
 
   return (
@@ -29,7 +35,9 @@ const Header = () => {
             <li><Link to="/contact">Contact</Link></li>
           </div>
           <div className='right-side'>
-            {isUserLoggedIn ? (
+            {isLoading ? (
+              <p>Loading...</p> // Show a loading message while the auth state is being checked
+            ) : isUserLoggedIn ? (
               <li><Link to="/dashboard">User Dashboard</Link></li>
             ) : (
               <>

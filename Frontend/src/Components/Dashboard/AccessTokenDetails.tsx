@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useAuth } from "../Header/AuthContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import "../Dashboard/token.css";
 
 interface BalancesResponse {
@@ -67,6 +69,7 @@ interface Budget {
   category: string,
   duration: string,
   firebase_user_id: string,
+  id: string
 }
 
 const AccessTokenDetails = () => {
@@ -88,6 +91,7 @@ const AccessTokenDetails = () => {
   const [duration, setDuration] = useState('');  
   const [history] = useState([]);
   const [firebaseUserId, setFirebaseUserId] = useState(localStorage.getItem('firebase_user_id') || '');
+  const [deleteCount, setDeleteCount] = useState(0);
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategory(event.target.value);
@@ -165,7 +169,7 @@ const AccessTokenDetails = () => {
       const data = await response.json();
       if (data.success) {
         console.log("Budget deleted successfully");
-        setBudgetData(data);
+        setDeleteCount(deleteCount + 1);
       }
     } catch (error) {
       console.error("Error deleting budget:", error);
@@ -225,12 +229,16 @@ const AccessTokenDetails = () => {
   }, [showBudgetModal, firebaseUserId]);
   
   useEffect(() => {
-    if (showCreateBudgetModal || showBudgetModal) {
+    get_user_budgets(firebaseUserId);
+  }, [deleteCount]);
+
+  useEffect(() => {
+    if (showCreateBudgetModal || showBudgetModal || showDeleteBudgetModal) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [showCreateBudgetModal || showBudgetModal]);
+  }, [showCreateBudgetModal || showBudgetModal || showDeleteBudgetModal]);
 
   if (!balancesData || !transactionsData) {
     return <div>Loading...</div>;
@@ -275,10 +283,10 @@ const AccessTokenDetails = () => {
                 <p className="budget-detail"><span className="budget-label">Amount:</span> ${budget.amount}</p>
               </div>
               ))}
-              <p className="budget-total"><span className="budget-label">Total:</span> ${budgetData && budgetData.budgets && budgetData.budgets.reduce((total, budget) => total + budget.amount, 0)}</p>
+              <p className="budget-total"><span className="budget-label">Total:</span> ${budgetData && budgetData.budgets && budgetData.budgets.reduce((total, budget) => total + budget.amount, 0).toFixed(2)}</p>
               <button className="yes" onClick={() => setShowCreateBudgetModal(true)}>Create Expense</button>
               <button className="yes" onClick={() => setShowDeleteBudgetModal(true)}>Delete Expense</button>
-\              <button className="no" onClick={() => setShowBudgetModal(false)}>Cancel</button>
+              <button className="no" onClick={() => setShowBudgetModal(false)}>Cancel</button>
             </div>
           </div>
         )}
@@ -308,18 +316,20 @@ const AccessTokenDetails = () => {
         )}
 
         {showDeleteBudgetModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className="modal-d">
+          <div className="modal-content-d">
             <h2 className="modal-h2">Your Expenses</h2>
             {budgetData && budgetData.budgets && budgetData.budgets.map((budget: Budget, index: number) => (
               <div key={index} className="budget-item">
                 <p className="budget-detail"><span className="budget-label">Category:</span> {budget.category}</p>
                 <p className="budget-detail"><span className="budget-label">Duration:</span> {budget.duration}</p>
                 <p className="budget-detail"><span className="budget-label">Amount:</span> ${budget.amount}</p>
+                <button className="trash-btn" onClick={() => delete_budget(budget.id)}>
+                  <FontAwesomeIcon icon={faTrash} size="lg" />
+                </button>
               </div>
               ))}
-              <p className="budget-total"><span className="budget-label">Total:</span> ${budgetData && budgetData.budgets && budgetData.budgets.reduce((total, budget) => total + budget.amount, 0)}</p>
-              <button className="yes" onClick={() => delete_budget}>Delete Expense</button>
+              <p className="budget-total"><span className="budget-label">Total:</span> ${budgetData && budgetData.budgets && budgetData.budgets.reduce((total, budget) => total + budget.amount, 0).toFixed(2)}</p>
               <button className="no" onClick={() => setShowDeleteBudgetModal(false)}>Cancel</button>
             </div>
           </div>
