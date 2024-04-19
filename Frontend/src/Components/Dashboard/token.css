@@ -223,22 +223,29 @@ h3 {
     width: 100%;
 }
 
+.eb-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
 .logout-btn {
     margin-top: 1rem;
 }
 
-.budget-label {
+.expense-label, .budget-label {
     font-weight: bold;
 }
 
-.budget-item {
+.expense-item, .budget-item {
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
 
-.budget-total {
+.expense-total, .budget-total {
     border-top: 1px solid #000;
     padding-top: 10px;
     margin-top: 10px;
@@ -274,6 +281,6 @@ h3 {
     margin-top: -3.75rem; 
 }
 
-.budget-detail {
+.expense-detail, .budget-detail {
     margin-top: -2rem;
 }
