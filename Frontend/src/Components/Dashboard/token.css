@@ -238,6 +238,10 @@ h3 {
     font-weight: bold;
 }
 
+.budget-label, .budget-detail {
+    font-size: 20px;
+}
+
 .expense-item, .budget-item {
     display: flex;
     justify-content: space-between;
@@ -249,6 +253,26 @@ h3 {
     border-top: 1px solid #000;
     padding-top: 10px;
     margin-top: 10px;
+}
+
+.expense-total-2 {
+    border-bottom: 1px solid #000;
+    font-size: 17px;
+    margin-bottom: 2.5rem;
+}
+
+.budget-item {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid #000;
+}
+
+.budget-detail {
+    margin-bottom: 0rem;
+}
+
+.budget-total-label {
+    font-weight: bold;
+    font-size: 18px;
 }
 
 .label {

@@ -233,8 +233,16 @@ const AccessTokenDetails = () => {
 
   const create_budget = async () => {
     try {
-      const response = await fetch(`/api/budget/create`, {
-        method: 'POST',
+      let url = `/api/budget/create`;
+      let method = 'POST';
+
+      if (budgetData && budgetData.budgets && budgetData.budgets.length > 0) {
+        url = `/api/budget/edit/`;
+        method = 'POST';
+      }
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -460,12 +468,24 @@ const AccessTokenDetails = () => {
             <h2 className="modal-h2">Your Budget</h2>
             {budgetData && budgetData.budgets && budgetData.budgets.map((budget: Budget, index: number) => (
               <div key={index} className="budget-item">
-                <p className="budget-detail"><span className="budget-label">Duration:</span> {budget.duration}</p>
-                <p className="budget-detail"><span className="budget-label">Amount:</span> ${budget.amount}</p>
+                <p className="budget-detail"><span className="budget-label">Budget Duration:</span> {budget.duration}</p>
+                <p className="budget-detail"><span className="budget-label">Budget Amount:</span> ${budget.amount}</p>
               </div>
               ))}
+              {expenseData && expenseData.expenses && expenseData.expenses.map((expense: Expense, index: number) => (
+              <div key={index} className="expense-item">
+                <p className="expense-detail"><span className="expense-label">Category:</span> {expense.category}</p>
+                <p className="expense-detail"><span className="expense-label">Duration:</span> {expense.duration}</p>
+                <p className="expense-detail"><span className="expense-label">Amount:</span> ${expense.amount}</p>
+              </div>
+              ))}
+              <p className="expense-total-2"><span className="expense-label">Expense Total:</span> ${expenseData && expenseData.expenses && expenseData.expenses.reduce((total, expense) => total + expense.amount, 0).toFixed(2)}</p>
+              <p className="budget-remaining">
+                <span className="budget-total-label">Remaining Budget: </span> 
+                ${((budgetData && budgetData.budgets ? budgetData.budgets.reduce((total, budget) => total + budget.amount, 0) : 0) - 
+                (expenseData && expenseData.expenses ? parseFloat(expenseData.expenses.reduce((total, expense) => total + expense.amount, 0).toFixed(2)) : 0)).toFixed(2)}
+              </p>     
               <button className="yes" onClick={() => setShowCreateBudgetModal(true)}>Create Budget</button>
-              <button className="yes" onClick={() => setShowDeleteBudgetModal(true)}>Delete Budget</button>
               <button className="no" onClick={() => setShowBudgetModal(false)}>Cancel</button>
             </div>
           </div>
@@ -487,24 +507,6 @@ const AccessTokenDetails = () => {
                 <input type="submit" value="Create Budget" className="yes-" />
               </form>
               <button className="no" onClick={() => setShowCreateBudgetModal(false)}>Cancel</button>
-            </div>
-          </div>
-        )}
-
-        {showDeleteBudgetModal && (
-        <div className="modal-d">
-          <div className="modal-content-d">
-            <h2 className="modal-h2">Your Budget</h2>
-            {budgetData && budgetData.budgets && budgetData.budgets.map((budget: Budget, index: number) => (
-              <div key={index} className="budget-item">
-                <p className="budget-detail"><span className="budget-label">Duration:</span> {budget.duration}</p>
-                <p className="budget-detail"><span className="budget-label">Amount:</span> ${budget.amount}</p>
-                <button className="trash-btn" onClick={() => delete_budget(budget.id)}>
-                  <FontAwesomeIcon icon={faTrash} size="lg" />
-                </button>
-              </div>
-              ))}
-              <button className="no" onClick={() => setShowDeleteBudgetModal(false)}>Cancel</button>
             </div>
           </div>
         )}
