@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import "../Dashboard/token.css";
 import { create } from "domain";
+import { get } from "http";
 
 interface BalancesResponse {
   accounts: Account[];
@@ -103,12 +104,12 @@ const AccessTokenDetails = () => {
   const [showCreateExpenseModal, setShowCreateExpenseModal] = useState(false);
   const [showDeleteExpenseModal, setShowDeleteExpenseModal] = useState(false);
   const [showCreateBudgetModal, setShowCreateBudgetModal] = useState(false);
-  const [showDeleteBudgetModal, setShowDeleteBudgetModal] = useState(false);
+  const [showDeleteBudgetModal] = useState(false);
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState(0);
   const [duration, setDuration] = useState('');  
   const [history] = useState([]);
-  const [firebaseUserId, setFirebaseUserId] = useState(localStorage.getItem('firebase_user_id') || '');
+  const [firebaseUserId] = useState(localStorage.getItem('firebase_user_id') || '');
   const [deleteCount, setDeleteCount] = useState(0);
   const [createCount, setCreateCount] = useState(0);
 
@@ -135,6 +136,18 @@ const AccessTokenDetails = () => {
     setShowExpenseModal(true);
 
     get_user_expenses(firebaseUserId);
+  }
+
+  const handleFormSubmit2 = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await create_budget();
+
+    setAmount(0);
+    setDuration('');
+    setShowCreateBudgetModal(false);
+    setShowBudgetModal(true);
+
+    get_user_budgets(firebaseUserId);
   }
 
   useEffect(() => {
@@ -233,16 +246,14 @@ const AccessTokenDetails = () => {
 
   const create_budget = async () => {
     try {
-      let url = `/api/budget/create`;
-      let method = 'POST';
-
       if (budgetData && budgetData.budgets && budgetData.budgets.length > 0) {
-        url = `/api/budget/edit/`;
-        method = 'POST';
+        edit_budget();
+        get_user_budgets(firebaseUserId);
+        return;
       }
 
-      const response = await fetch(url, {
-        method: method,
+      const response = await fetch(`/api/budget/create`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -264,25 +275,31 @@ const AccessTokenDetails = () => {
     }
   };
 
-  const delete_budget = async (budgetId: string) => {
+  const edit_budget = async () => {
     try {
-      const response = await fetch(`/api/budget/delete`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          budget_id: budgetId,
-          firebase_user_id: firebaseUserId,
-        }),
-      });
-      const data = await response.json();
-      if (data.success) {
-        console.log("Budget deleted successfully");
-        setDeleteCount(deleteCount + 1);
+      let data;
+      if (budgetData && budgetData.budgets && budgetData.budgets.length > 0) {
+        const response = await fetch('/api/budget/edit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            budget_id: budgetData.budgets[0].id,
+            amount: amount,
+            duration: duration,
+            firebase_user_id: firebaseUserId,
+            history: history
+          }),
+        });
+        data = await response.json();
+        setBudgetData(data);
+      }
+      if (data && data.success) {
+        setCreateCount(createCount + 1);
       }
     } catch (error) {
-      console.error("Error deleting budget:", error);
+      console.error("Error updating budget:", error);
     }
   };
   
@@ -308,7 +325,7 @@ const AccessTokenDetails = () => {
 
   const handleLogout = async () => { 
     try {
-      await signOut(auth); // log out the user from Firebase
+      await signOut(auth);
       setIsUserLoggedIn(false);
       navigate('/');
     } catch (error) {
@@ -495,7 +512,7 @@ const AccessTokenDetails = () => {
           <div className="modal-c">
             <div className="modal-content-c">
               <h2 className="modal-h2">Create A Budget</h2>
-              <form onSubmit={create_budget}>
+              <form onSubmit={handleFormSubmit2}>
                 <label className="label">
                   <span>Amount:</span>
                   <input type="number" value={amount || ''} onChange={handleAmountChange} required/>
