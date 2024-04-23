@@ -674,6 +674,100 @@ def ask_chatbot():
     else:
         return jsonify({'error': 'Document not found'}), 404
 
+@app.route('/api/expense/get', methods=['GET'])
+def get_user_expenses():
+    firebase_user_id = request.args.get('firebase_user_id')
+    try:
+        expense_docs = db.collection("expenses").where("firebase_user_id", "==", firebase_user_id).get()
+        expenses = []
+
+        if expense_docs:
+            for expense_doc in expense_docs:
+                expense_data = expense_doc.to_dict()
+                expense_data['id'] = expense_doc.id
+                expenses.append(expense_data)
+
+            return jsonify({'success': True, 'expenses': expenses}), 200
+        else:
+            return jsonify({'success': False, 'error': 'No expenses found for the user'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    
+@app.route('/api/expense/create', methods=['POST'])
+def create_expense():
+    amount = request.json.get('amount')
+    category = request.json.get('category')
+    duration = request.json.get('duration')
+    history = []
+    firebase_user_id = request.json.get('firebase_user_id')
+    expense_data = {
+        'amount': amount,
+        'category': category,
+        'duration': duration,
+        'firebase_user_id': firebase_user_id,
+        'history': history
+    }
+    try:
+        expense_ref = db.collection("expenses").add(expense_data)
+        expense_id = expense_ref[1].id
+        return jsonify({'success': True, 'expense_id': expense_id}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/expense/delete', methods=['POST'])
+def delete_expense():
+    expense_id = request.json.get('expense_id')
+    firebase_user_id = request.json.get('firebase_user_id')
+
+    try:
+        expense_ref = db.collection("expenses").document(expense_id)
+
+        expense_doc = expense_ref.get()
+
+        if expense_doc.exists and expense_doc.to_dict().get('firebase_user_id') == firebase_user_id:
+            expense_ref.delete()
+            return jsonify({'success': True, 'message': 'expense deleted successfully'}), 200
+        else:
+            return jsonify({'success': False, 'error': 'expense not found or unauthorized access'}), 404
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/expense/edit', methods=['POST'])
+def edit_expense():
+    expense_id = request.json.get('expense_id')
+    firebase_user_id = request.json.get('firebase_user_id')
+    amount = request.json.get('amount')
+    change = request.json.get('change')
+    category = request.json.get('category')
+    duration = request.json.get('duration')
+
+    try:
+        expense_ref = db.collection("expenses").document(expense_id)
+        expense_doc = expense_ref.get()
+
+        if expense_doc.exists and expense_doc.to_dict().get('firebase_user_id') == firebase_user_id:
+            expense_data = expense_doc.to_dict()
+            history = expense_data.get('history', [])
+            history.append(change)
+            old_amount = expense_data.get("amount")
+            old_category = expense_data.get("category")
+            old_duration = expense_data.get("duration")
+            expense_ref.update({
+                'amount': amount if amount else old_amount,
+                'category': category if category else old_category,
+                'duration': duration if duration else old_duration,
+                'history': history
+            })
+
+            return jsonify({'success': True, 'message': 'expense updated successfully'}), 200
+        else:
+            return jsonify({'success': False, 'error': 'expense not found or unauthorized access'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @app.route('/api/budget/get', methods=['GET'])
 def get_user_budgets():
     firebase_user_id = request.args.get('firebase_user_id')
@@ -696,13 +790,11 @@ def get_user_budgets():
 @app.route('/api/budget/create', methods=['POST'])
 def create_budget():
     amount = request.json.get('amount')
-    category = request.json.get('category')
     duration = request.json.get('duration')
     history = []
     firebase_user_id = request.json.get('firebase_user_id')
     budget_data = {
         'amount': amount,
-        'category': category,
         'duration': duration,
         'firebase_user_id': firebase_user_id,
         'history': history
@@ -714,6 +806,35 @@ def create_budget():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+@app.route('/api/budget/edit', methods=['POST'])
+def edit_budget():
+    budget_id = request.json.get('budget_id')
+    firebase_user_id = request.json.get('firebase_user_id')
+    change = request.json.get('change')
+    amount = request.json.get('amount')
+    duration = request.json.get('duration')
+
+    try:
+        budget_ref = db.collection("budgets").document(budget_id)
+        budget_doc = budget_ref.get()
+
+        if budget_doc.exists and budget_doc.to_dict().get('firebase_user_id') == firebase_user_id:
+            budget_data = budget_doc.to_dict()
+            history = budget_data.get('history', [])
+            history.append(change)
+            old_amount = budget_data.get("amount")
+            old_duration = budget_data.get("duration")
+            budget_ref.update({
+                'amount': amount if amount else old_amount,
+                'duration': duration if duration else old_duration,
+                'history': history
+            })
+
+            return jsonify({'success': True, 'message': 'budget updated successfully'}), 200
+        else:
+            return jsonify({'success': False, 'error': 'budget not found or unauthorized access'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/budget/delete', methods=['POST'])
 def delete_budget():
@@ -727,47 +848,12 @@ def delete_budget():
 
         if budget_doc.exists and budget_doc.to_dict().get('firebase_user_id') == firebase_user_id:
             budget_ref.delete()
-            return jsonify({'success': True, 'message': 'Budget deleted successfully'}), 200
+            return jsonify({'success': True, 'message': 'budget deleted successfully'}), 200
         else:
-            return jsonify({'success': False, 'error': 'Budget not found or unauthorized access'}), 404
+            return jsonify({'success': False, 'error': 'budget not found or unauthorized access'}), 404
 
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
-
-
-@app.route('/api/budget/edit', methods=['POST'])
-def edit_budget():
-    budget_id = request.json.get('budget_id')
-    firebase_user_id = request.json.get('firebase_user_id')
-    amount = request.json.get('amount')
-    change = request.json.get('change')
-    category = request.json.get('category')
-    duration = request.json.get('duration')
-
-    try:
-        budget_ref = db.collection("budgets").document(budget_id)
-        budget_doc = budget_ref.get()
-
-        if budget_doc.exists and budget_doc.to_dict().get('firebase_user_id') == firebase_user_id:
-            budget_data = budget_doc.to_dict()
-            history = budget_data.get('history', [])
-            history.append(change)
-            old_amount = budget_data.get("amount")
-            old_category = budget_data.get("category")
-            old_duration = budget_data.get("duration")
-            budget_ref.update({
-                'amount': amount if amount else old_amount,
-                'category': category if category else old_category,
-                'duration': duration if duration else old_duration,
-                'history': history
-            })
-
-            return jsonify({'success': True, 'message': 'Budget updated successfully'}), 200
-        else:
-            return jsonify({'success': False, 'error': 'Budget not found or unauthorized access'}), 404
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
 
 def pretty_print_response(response):
     print(json.dumps(response, indent=2, sort_keys=True, default=str))
