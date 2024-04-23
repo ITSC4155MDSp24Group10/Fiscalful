@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "plaid-threads": "^14.5.0"
+    "chart.js": "^4.4.2",
+    "plaid-threads": "^14.5.0",
+    "react-chartjs-2": "^5.2.0",
+    "recharts": "^2.12.6",
+    "victory": "^37.0.2"
   }
 }
