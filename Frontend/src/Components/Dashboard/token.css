@@ -308,3 +308,99 @@ h3 {
 .expense-detail, .budget-detail {
     margin-top: -2rem;
 }
+
+/* ===================== BREAKPOINTS ===================== /
+
+/*     Tablet Devices      */
+@media screen and (min-width: 476px) and (max-width: 1380px) {
+
+    .parent-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+/*      Mobile Devices      */
+@media screen and (max-width: 475px) {
+    .token__title,
+    .token__subtitle,
+    h3,
+    .account-card,
+    .balance-card,
+    .button-container,
+    .page-button,
+    .modal-connect,
+    .modal,
+    .modal-c,
+    .modal-d,
+    .modal-content-connect,
+    .modal-content,
+    .modal-content-c,
+    .modal-content-d,
+    .yes,
+    .no,
+    .yes-,
+    .logout-btn,
+    .connect-btn,
+    .connect-container,
+    .logout-container,
+    .eb-container,
+    .expense-item,
+    .budget-item,
+    .label input {
+        width: calc(100% - 2rem);
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .parent-container,
+    .accounts-container,
+    .balances-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin: auto;
+        padding: 0 2rem;
+    }
+
+    .balances-container {
+        width: 220%;
+        margin-left: -10rem;
+        margin-right: 0rem;
+    }
+
+    .transaction-card {
+        flex-basis: 40%;
+    }
+
+    .transactions-container {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .modal-content-connect,
+    .modal-content,
+    .modal-content-c,
+    .modal-content-d {
+        width: 90%;
+        height: auto;
+    }
+
+    .modal-content-c {
+        height: 70%;
+    }
+
+    .modal-content-d {
+        height: 70%;
+    }
+
+    .logout-btn,
+    .connect-btn {
+        margin-top: 1rem;
+    }
+   
+}
