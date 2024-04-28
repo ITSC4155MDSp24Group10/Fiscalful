@@ -313,7 +313,6 @@ h3 {
 
 /*     Tablet Devices      */
 @media screen and (min-width: 476px) and (max-width: 1380px) {
-
     .parent-container {
         display: flex;
         flex-direction: column;
