@@ -27,15 +27,8 @@ const Header = () => {
       {!linkSuccess ? (
         <>
           <h4 className={styles.subtitle}>
-            A sample end-to-end integration with Plaid
+            Connect Your Bank Account
           </h4>
-          <p className={styles.introPar}>
-            The Plaid flow begins when your user wants to connect their bank
-            account to your app. Simulate this by clicking the button below to
-            launch Link - the client-side component that your users will
-            interact with in order to link their accounts to Plaid and allow you
-            to access their accounts via the Plaid API.
-          </p>
           {/* message if backend is not running and there is no link token */}
           {!backend ? (
             <Callout warning>
