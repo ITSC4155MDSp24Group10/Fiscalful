@@ -387,15 +387,12 @@ h3 {
     .modal-content-c,
     .modal-content-d {
         width: 90%;
-        height: auto;
+        height: 50%;
+        margin-top: 5rem;
     }
 
-    .modal-content-c {
-        height: 70%;
-    }
-
-    .modal-content-d {
-        height: 70%;
+    .modal-content-connect {
+        height: 38%;
     }
 
     .logout-btn,
