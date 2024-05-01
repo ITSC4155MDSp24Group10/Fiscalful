@@ -4,6 +4,7 @@ import emailjs from '@emailjs/browser';
 import './contact.css';
 
 const Contact = () => {
+  const [submitted, setSubmitted] = React.useState(false);
   const form = useRef<HTMLFormElement>(null);
 
   const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,7 +24,12 @@ const Contact = () => {
           },
         );
     }
+    setSubmitted(true);
     (e.target as HTMLFormElement).reset();
+
+    setTimeout(() => {
+      setSubmitted(false);
+    }, 3000);
   };
 
   return (
@@ -58,6 +64,9 @@ const Contact = () => {
           </form>
         </div>
       </div>
+      {submitted ? (
+            <h3>Thank you for your message!</h3>
+          ) : ('')}
     </section>
   );
 };

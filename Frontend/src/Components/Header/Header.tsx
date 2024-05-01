@@ -1,13 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useAuth } from './AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo, faEnvelope, faChartLine, faRightToBracket, faSquarePlus, faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import './header.css';
 
 const Header = () => {
   const location = useLocation();
   const { isUserLoggedIn, setIsUserLoggedIn, isLoading } = useAuth(); // Add isLoading to the destructured variables
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  }
 
   useEffect(() => {
     // Set the auth persistence to LOCAL
@@ -29,22 +37,25 @@ const Header = () => {
     <header className='header'>
       <nav className='header-nav'>
         <ul className='links'>
-          <div className='left-side'>
-            <li className='logo'><Link to="/">Fiscalful</Link></li>
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
-          </div>
-          <div className='right-side'>
+          <Link className='logo' to="/">Fiscalful</Link>
+          <div className={isMenuOpen ? 'links-container change_to_flex' : 'links-container change_to_none'}>
+            <li><FontAwesomeIcon icon={faCircleInfo} /><Link to="/about" onClick={toggleMenu}>About</Link></li>
+            <li><FontAwesomeIcon icon={faEnvelope} /><Link to="/contact" onClick={toggleMenu}>Contact</Link></li>
             {isLoading ? (
               <p>Loading...</p> // Show a loading message while the auth state is being checked
             ) : isUserLoggedIn ? (
-              <li><Link to="/dashboard">User Dashboard</Link></li>
+              <li className='dashboard-link'><FontAwesomeIcon icon={faChartLine} /><Link to="/dashboard" onClick={toggleMenu}>User Dashboard</Link></li>
             ) : (
               <>
-                <li><Link to="/login">Log In</Link></li>
-                <li><Link to="/signup">Get Started</Link></li>
+                <li className='login-link' onClick={toggleMenu}><FontAwesomeIcon icon={faRightToBracket} /><Link to="/login">Log In</Link></li>
+                <li className='signup-link' onClick={toggleMenu}><FontAwesomeIcon icon={faSquarePlus} /><Link to="/signup">Get Started</Link></li>
               </>
             )}
+          </div>
+          <div className='menu-button' onClick={toggleMenu}>
+            {isMenuOpen ? <FontAwesomeIcon icon={faXmark} size='xl' /> 
+            : <FontAwesomeIcon icon={faBars} size='xl'/>
+            }
           </div>
         </ul>
       </nav>

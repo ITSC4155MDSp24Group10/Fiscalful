@@ -1,6 +1,11 @@
 import React from 'react';
 import './about.css';
 import placeholder from '../../Assets/placeholder-portrait.jpg';
+import trevor_portrait from '../../Assets/trevor-portrait.jpg';
+import devon_portrait from '../../Assets/devon-portrait.jpg';
+import minh_portrait from '../../Assets/minh-portrait.jpg';
+import shail_portrait from '../../Assets/shail-portrait.jpg';
+import finance_image from '../../Assets/finance-graphic.png';
 
 const About = () => {
   return (
@@ -10,52 +15,55 @@ const About = () => {
       <div className='info-container'>
         <div className='story-container'>
           <h2 className='story-subtitle'>Our Vision</h2>
-          <p>Sed non velit sit amet metus mattis dapibus id ut dui. Etiam sem ligula, feugiat eu sapien non, iaculis bibendum tortor. Sed egestas dolor metus, laoreet varius ante semper et. Phasellus laoreet et purus sit amet sagittis. Integer at consequat ligula. Fusce nec auctor lectus. Quisque imperdiet est et sem ultricies, vel ultricies ante tristique. Aliquam at dolor tincidunt, volutpat tellus a, imperdiet massa. Nam finibus ipsum consequat orci viverra, in convallis libero laoreet. Mauris quis malesuada nisl. Aliquam id arcu imperdiet, posuere mi quis, scelerisque lectus. Proin eget nunc non nunc sagittis maximus et eu turpis.</p>
+          <p className='story-text'>Currently, hundreds of millions of people worldwide are suffering from economic hardships brought on by a variety of internal and external factors. To encourage financial security and stability, it is imperative that people have access to the technology that will assist and support their financial decisions. That is where Fiscalful comes in. Our software offers ways to provide information on economic trends, create budgeting plans, and securely connect to a user's bank account. Through an intuitive chatbot, users can gain personalized financial insights and advice. Lastly, budget plans can be customized based on their income, expenses, and financial goals.</p>
+          <img src={finance_image} alt='Finance Graphic'></img>
         </div>
 
         <div className='vertical-divider'></div>
+        <div className='horizontal-divider'></div>
 
         <div className='team-container'>
+          <h2>Meet the Team</h2>
           <div className='team-info'>
-            <h2>Meet the Team</h2>
+            
 
             <div className='card'>
               <div className='card-info'>
-                <img src={placeholder} alt='Student 1'></img>
-                <h4>Student 1</h4>
-                <p>Team Role</p>
+                <img src={trevor_portrait} alt='Trevor Richardson'></img>
+                <h4>Trevor<br></br>Richardson</h4>
+                <p>Frontend</p>
               </div>
             </div>
 
             <div className='card'>
               <div className='card-info'>
-                <img src={placeholder} alt='Student 1'></img>
-                <h4>Student 2</h4>
-                <p>Team Role</p>
+                <img src={devon_portrait} alt='Devon Lemasters'></img>
+                <h4>Devon<br></br>Lemasters</h4>
+                <p>Backend</p>
               </div>
             </div>
 
             <div className='card'>
               <div className='card-info'>
-                <img src={placeholder} alt='Student 1'></img>
-                <h4>Student 3</h4>
-                <p>Team Role</p>
+                <img src={shail_portrait} alt='Shail Patel'></img>
+                <h4>Shail<br></br>Patel</h4>
+                <p>Backend</p>
               </div>
             </div>
 
             <div className='card'>
               <div className='card-info'>
-                <img src={placeholder} alt='Student 1'></img>
-                <h4>Student 4</h4>
-                <p>Team Role</p>
+                <img src={placeholder} alt='Justin Tubay Sanchez'></img>
+                <h4>Justin Tubay<br></br>Sanchez</h4>
+                <p>Backend</p>
               </div>
             </div>
 
             <div className='card'>
               <div className='card-info'>
-                <img src={placeholder} alt='Student 1'></img>
-                <h4>Student 5</h4>
-                <p>Team Role</p>
+                <img src={minh_portrait} alt='Minh Anh Nguyen'></img>
+                <h4>Minh Anh<br></br>Nguyen</h4>
+                <p>Frontend</p>
               </div>
             </div>
 

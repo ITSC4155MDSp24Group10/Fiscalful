@@ -84,4 +84,15 @@
     cursor: pointer;
     color: black;
 } 
- 
+
+/* Mobile Devices */
+@media screen and (max-width: 768px) {
+    .signup__title {
+        font-size: 5rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+}

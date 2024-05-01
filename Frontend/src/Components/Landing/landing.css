@@ -11,10 +11,10 @@ body {
 .landing-image {
     width: 50%;
     height: 100vh;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     order: 2;
-    margin-top: 3rem;
 } 
  
 .landing-content {
@@ -51,3 +51,79 @@ body {
 .get-started-button:hover {
     background-color: #444;
 }
+
+/* Mobile Devices */
+@media screen and (max-width: 768px) {
+    .landing-container {
+        height: 100vh;
+        flex-direction: column;
+    }
+    .landing-content {
+        justify-content: start;
+    }
+
+    .landing-title {
+        margin-top: 0;
+    }
+
+    .landing-subtitle {
+        margin-top: 1.5rem;
+        margin-bottom: 2rem;
+    }
+ 
+    .landing-text {
+       text-align: center;
+       padding-left: 95%;
+       order: 1;
+    }
+
+    .landing-text h1 {
+        width: 100%;
+        font-size: 3.5rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .landing-text h2 {
+        width: 100%;
+        font-size: 2rem;
+    }
+ 
+    .landing-image {
+       width: 100%;
+       height: 60vh;
+       margin-top: 20%;
+       order: -1;
+    }
+ }
+
+ /* Tablet Devices */
+ @media screen and (min-width: 476px) and (max-width: 999px) {
+    .landing-container {
+        height: 100vh;
+        flex-direction: column;
+    }
+
+    .landing-content {
+        justify-content: start;
+        width: 100%;
+    }
+
+    .landing-text {
+        width: 100%;
+        text-align: center;
+        padding-left: 15%;
+        padding-right: 15%;
+        order: 1;
+    }
+
+    .landing-text h1 {
+        margin-top: 0;
+    }
+
+    .landing-image {
+        width: 100%;
+        margin-top: 10%;
+        order: -1;
+    }
+ }
