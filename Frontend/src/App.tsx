@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { auth, signOut } from '../../frontend/src/firebase';
+import { auth, signOut } from '../../Frontend/src/firebase';
 import "./app.css";
 import Header from "./Components/Header/Header";
+import Footer from "./Components/Footer/Footer";
 import Landing from "./Components/Landing/Landing"; 
 import About from "./Components/About/About";
 import Contact from "./Components/Contact/Contact";
@@ -37,6 +38,7 @@ function App() {
                                 <Route path="/dashboard/access-token-details/:tokenId" element={<AccessTokenDetails />} />
                             </Routes>
                         </main>
+                    <Footer />
                 </Router>
             </AuthProvider>
         </>

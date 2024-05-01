@@ -10,41 +10,65 @@
 
 .story-container {
    width: 50%;
+   display: flex;
+   flex-direction: column;
 }
 
-.story-container h2, p {
+.story-container h2{
    width: 75%;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 0;
+}
+
+.story-container p {
+   width: 75%;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+.story-container img {
+   width: 80%;
    margin-left: auto;
    margin-right: auto;
 }
 
 .vertical-divider {
-   height: 560px;
+   height: 630px;
    position: absolute;
    left: 50%;
    border-left: 2px solid black;
 }
 
+.horizontal-divider {
+   display: none;
+   border-top: 2px solid black;
+}
+
 .team-container {
    width: 50%;
+   flex-direction: column;
+}
+
+.team-container h2 {
+   width: 75%;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 0;
 }
 
 .team-info {
    width: 75%;
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 10px;
    margin-left: auto;
    margin-right: auto;
 }
 
-.team-info h2 {
-   margin-bottom: 5px;
-}
-
 .card {
-   width: 200px;
-   height: 240px;
-   margin-right: 24px;
-   margin-top: 24px;
-   display: inline-block;
+   width: auto;
+   height: auto;
 }
 
 .card-info {
@@ -55,9 +79,90 @@
 .card-info img {
    width: 130px;
    margin-top: 12px;
-   border-radius: 50%;
+   border-radius: 10%;
+   border: 3px solid black;
 }
 
 .card-info h4 {
    margin: 2px;
+}
+
+/* Mobile Devices */
+@media screen and (max-width: 768px) {
+   .about-title {
+      font-size: 5rem;
+   }
+
+   .info-container {
+      width: 100%;
+      flex-direction: column;
+      text-align: center;
+   }
+
+   .story-container, .team-container {
+      width: 100%;
+   }
+
+   .vertical-divider {
+      display: none;
+   }
+
+   .horizontal-divider {
+      display: block;
+      border-top: 2px solid black;
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 50px;
+   }
+
+   .team-container h2 {
+      margin-top: 50px;;
+   }
+   
+   .team-info {
+      grid-template-columns: repeat(1, 1fr);
+      margin-bottom: 40px;
+   }
+   
+}
+
+/* Tablet Devices */
+@media screen and (min-width: 476px) and (max-width: 999px) {
+   .about-title {
+      font-size: 5rem;
+   }
+
+   .info-container {
+      width: 100%;
+      flex-direction: column;
+      text-align: center;
+   }
+
+   .story-container, .team-container {
+      width: 100%;
+   }
+
+   .vertical-divider {
+      display: none;
+   }
+
+   .horizontal-divider {
+      display: block;
+      border-top: 2px solid black;
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 50px;
+   }
+
+   .team-container h2 {
+      margin-top: 50px;
+   }
+   
+   .team-info {
+      grid-template-columns: repeat(3, 1fr);
+      margin-bottom: 40px;
+   }
+
 }

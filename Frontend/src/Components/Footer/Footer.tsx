@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './header.css';
+import './footer.css';
 
 const Footer = () => {
     return (
-        <>
-        </>
+        <footer className="footer">
+            <p>&copy; 2024 Fiscalful. Released under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
+        </footer>
     );
 }
 

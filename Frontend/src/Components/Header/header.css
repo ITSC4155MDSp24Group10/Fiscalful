@@ -1,17 +1,17 @@
 .header {
-    background-color: white;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-    border-bottom: 5px solid black;
+   background-color: white;
+   width: 100%;
+   position: fixed;
+   top: 0;
+   left: 0;
+   z-index: 999;
+   border-bottom: 5px solid black;
 }
- 
+
 li {
-    list-style: none;
-    display: inline-block;
-    margin-right: 2rem;
+   list-style: none;
+   display: inline-block;
+   margin-right: 2rem;
 }
 
 a {
@@ -20,8 +20,9 @@ a {
    font: bold 1.5rem sans-serif;
 }
 
-.logo a {
+.logo {
    font-size: 2rem;
+   margin-right: 2rem;
 }
 
 .header-nav {
@@ -31,18 +32,100 @@ a {
 
 .links {
    display: flex;
-   justify-content: space-between;
+   width: 100%;
+   padding-right: 40px;
+}
+
+.links-container {
+   display: flex;
    width: 100%;
 }
 
-.left-side {
-   margin-left: -1rem;
+.login-link, .dashboard-link {
+   margin-left: auto;
+   margin-right: 0;
 }
 
-.right-side {
-   margin-right: 1rem;
+.signup-link {
+   margin-left: 2rem;
+   margin-right: 0;
 }
 
-.left-side, .right-side {
-   display: flex;
+.links-container li svg {
+   display: none;
+}
+
+.menu-button {
+   display: none;
+}
+
+.line_1, .line_2, .line_3 {
+   width: 2rem;
+   height: 0.25rem;
+   border-radius: 10px;
+   background-color: black;
+   transform-origin: 1px;
+   transition: all 0.3s linear;
+}
+
+/* Mobile Devices */
+@media screen and (max-width: 768px) {
+   .links {
+      padding: 0;
+    }
+
+    .logo {
+      padding-left: 2rem;
+    }
+
+    .links-container {
+      flex-direction: column;
+      background-color: whitesmoke;
+      margin-top: 45px;
+      width: 100%;
+      position: absolute;
+    }
+
+    .links-container li {
+      border-bottom: 2px solid black;
+      margin-right: 0;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      padding-left: 2rem;
+    }
+
+    .links-container a {
+      font-size: 1.75rem;
+      margin-left: 8px;
+    }
+    
+    .signup-link path {
+      width: 16px;
+      
+    }
+
+    .links-container li svg {
+      display: inline-block;
+    }
+
+    .menu-button {
+      display: block;
+      display: flex;
+      margin-left: auto;
+      margin-right: 2rem;
+    }
+
+    .login-link, .signup-link, .dashboard-link {
+      margin-left: 0;
+    }
+    
+   /* Display menu */
+   .change_to_flex {
+      display: flex;
+   }
+
+   /* Hide menu */
+   .change_to_none {
+      display: none;
+   }
 }

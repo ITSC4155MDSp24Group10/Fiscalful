@@ -74,3 +74,10 @@
     background-color: #555;
 }
 
+/* Mobile Devices */
+@media screen and (max-width: 768px) {
+    .login__title {
+        font-size: 5rem;
+    }
+}
+
