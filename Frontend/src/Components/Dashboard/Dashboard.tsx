@@ -139,8 +139,7 @@ const App = () => {
             {isPaymentInitiation && <Products />}
             {isItemAccess && (
               <>
-                <Products />
-                <Items />
+                <></>
               </>
             )}
           </>

@@ -5,6 +5,7 @@ import trevor_portrait from '../../Assets/trevor-portrait.jpg';
 import devon_portrait from '../../Assets/devon-portrait.jpg';
 import minh_portrait from '../../Assets/minh-portrait.jpg';
 import shail_portrait from '../../Assets/shail-portrait.jpg';
+import justin_portrait from '../../Assets/justin_portrait.jpg';
 import finance_image from '../../Assets/finance-graphic.png';
 
 const About = () => {
@@ -53,7 +54,7 @@ const About = () => {
 
             <div className='card'>
               <div className='card-info'>
-                <img src={placeholder} alt='Justin Tubay Sanchez'></img>
+                <img src={justin_portrait} alt='Justin Tubay Sanchez'></img>
                 <h4>Justin Tubay<br></br>Sanchez</h4>
                 <p>Backend</p>
               </div>
