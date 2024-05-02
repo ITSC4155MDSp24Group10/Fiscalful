@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { auth, signOut } from '../../Frontend/src/firebase';
+import { auth, signOut } from './firebase';
 import "./app.css";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
