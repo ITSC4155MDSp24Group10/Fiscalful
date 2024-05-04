@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { auth, signOut } from './firebase';
 import "./app.css";
 import Header from "./Components/Header/Header";
+import Chatbot from './Components/Chatbot/chatbot';
 import Footer from "./Components/Footer/Footer";
 import Landing from "./Components/Landing/Landing"; 
 import About from "./Components/About/About";
@@ -27,6 +28,7 @@ function App() {
             <AuthProvider>
                 <Router>
                     <Header />
+                    <Chatbot />
                         <main className="main">
                             <Routes>
                                 <Route path="/" element={<Landing />} />
