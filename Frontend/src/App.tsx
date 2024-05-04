@@ -28,7 +28,6 @@ function App() {
             <AuthProvider>
                 <Router>
                     <Header />
-                    <Chatbot />
                         <main className="main">
                             <Routes>
                                 <Route path="/" element={<Landing />} />
@@ -40,6 +39,7 @@ function App() {
                                 <Route path="/dashboard/access-token-details/:tokenId" element={<AccessTokenDetails />} />
                             </Routes>
                         </main>
+                        <Chatbot />
                     <Footer />
                 </Router>
             </AuthProvider>
