@@ -75,3 +75,29 @@
   margin-top: 7 * $unit;
   font-size: 2 * $unit;
 }
+
+/* Mobile Devices */
+@media screen and (max-width: 768px) {
+  .title {
+    margin-left: -5rem !important;
+  }
+
+  .subtitle {
+    margin-left: -13rem !important;
+  }
+
+  .linkButton {
+    margin-left: -14rem !important;
+  }
+}
+
+/* Tablet Devices */
+@media screen and (min-width: 476px) and (max-width: 999px) {
+  .title {
+    margin-left: -15rem !important;
+  }
+
+  .subtitle {
+    margin-left: -14rem !important;
+  }
+}

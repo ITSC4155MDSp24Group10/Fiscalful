@@ -137,8 +137,6 @@ const Header = () => {
             </div>
             {isItemAccess && (
                 <p className={styles.requests}>
-                  Now that you have an access_token, you can make all of the
-                  following requests:
                 </p>
             )}
           </>

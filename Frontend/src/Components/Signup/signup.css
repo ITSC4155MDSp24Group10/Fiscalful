@@ -3,12 +3,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 90vh;
 }
  
 .signup__title {
     text-align: center;
-    margin-top: 11rem;
     margin-bottom: 0rem;
 }
   
