@@ -4,7 +4,6 @@
 
 .account-link {
     text-align: center;
-
 }
 
 .account-link:hover {
@@ -12,3 +11,37 @@
     color: #444;
     text-decoration: underline;
 }
+
+/* Mobile Devices */
+@media screen and (max-width: 768px) {
+    .account-list {
+        width: 300px;
+    }
+
+    .account-title {
+        text-align: center;
+        margin-left: -15rem;
+    }
+    
+    .account-link {
+        text-align: center;
+        margin-right: 5rem;
+    }
+ }
+
+ /* Tablet Devices */
+ @media screen and (min-width: 476px) and (max-width: 999px) {
+    .account-list {
+        width: 300px;
+    }
+
+    .account-title {
+        text-align: center;
+        margin-left: -15rem;
+    }
+    
+    .account-link {
+        text-align: center;
+        margin-right: 5rem;
+    }
+ }

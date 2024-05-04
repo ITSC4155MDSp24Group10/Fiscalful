@@ -1,6 +1,5 @@
 .token__title {
     text-align: center;
-    margin-top: 8rem;
     margin-bottom: 0rem;
 }
 
@@ -65,6 +64,7 @@ h3 {
     display: flex;
     justify-content: center;
     margin-top: 2rem;
+    margin-bottom: 4rem;
 }
   
 .page-button {

@@ -11,7 +11,7 @@ const Chatbot = () => {
     script.onload = () => {
       window.botpressWebChat.init({
           "composerPlaceholder": "Chat with Fiscalful Bot",
-          "botConversationDescription": "Your personal financial advisor",
+          "botConversationDescription": "Your Personal Financial Advisor",
           "botId": "ede992fe-8a7a-42f2-8601-0406e42de8c8",
           "hostUrl": "https://cdn.botpress.cloud/webchat/v1",
           "messagingUrl": "https://messaging.botpress.cloud",

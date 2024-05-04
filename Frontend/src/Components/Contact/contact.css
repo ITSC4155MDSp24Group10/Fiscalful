@@ -75,9 +75,16 @@
 }
 
 /* Mobile Devices */
-@media screen and (max-width: 768px) {
-    .login__title {
+@media screen and (max-width: 475px) {
+    .contact__title {
         font-size: 5rem;
     }
 }
+
+ /* Tablet Devices */
+ @media screen and (min-width: 476px) and (max-width: 999px) {
+    .form-container {
+        margin-bottom: 8rem;
+    }
+ }
 
