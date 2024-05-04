@@ -4,7 +4,7 @@ import './footer.css';
 const Footer = () => {
     return (
         <footer className="footer">
-            <p>&copy; 2024 Fiscalful. Released under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
+            <p>&copy; 2024 Fiscalful | All Rights Reserved</p>
         </footer>
     );
 }
