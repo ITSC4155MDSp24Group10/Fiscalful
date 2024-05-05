@@ -55,10 +55,6 @@ html {
   .bpw-header-subtitle {
     color: #ffffff;
   }
-
-  .bpw-chat-container {
-    height: 300px !important;
-  }
   
   /* Styling for the layout of the chat bubble. Width, height, border, position and radius of the chat bubble */
   .bpw-layout {

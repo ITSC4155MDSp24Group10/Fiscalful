@@ -131,3 +131,10 @@ body {
         order: -1;
     }
  }
+
+ /* Large Devices */
+ @media screen and (min-width: 1500px) {
+    .landing-image {
+        margin-top: 5rem;
+    }
+}
