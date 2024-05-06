@@ -11,4 +11,5 @@ to run individualy starting at the root project directory run
 
 for the backend start by going back to the root directory
 `cd/python`
+`pip install -r requirements.txt`
 `flask --app server.py run --port=8000`
